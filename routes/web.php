@@ -9,6 +9,16 @@ Route::get('/', function () {
     return view('home');
 })->name('');
 
+/*
+|--------------------------------------------------------------------------
+| Route per role
+|--------------------------------------------------------------------------
+| Setiap role punya file route sendiri agar rapi dan tidak saling tabrak.
+| - routes/client.php → halaman user client  (prefix /client, name client.*)
+| - routes/admin.php  → halaman user admin   (prefix /admin,  name admin.*)
+*/
+require __DIR__ . '/client.php';
+
 
 // Route::middleware([RedirectIfAccessTokenExist::class])->group(function () {
 
