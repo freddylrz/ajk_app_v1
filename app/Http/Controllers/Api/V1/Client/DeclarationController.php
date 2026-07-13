@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use File;
@@ -191,7 +190,6 @@ class DeclarationController extends Controller
 
         $validator = Validator::make($input, [
             'policy_no' => 'nullable|string|max:30',
-            'branch_id' => 'required|integer',
             'insured_name' => 'required|string|max:255',
             'nik' => 'required|string|max:20',
             'gender_id' => 'required|integer|in:1,2',
@@ -409,7 +407,6 @@ class DeclarationController extends Controller
         $validator = Validator::make($input, [
             'id' => 'required|string',
             'policy_no' => 'nullable|string|max:30',
-            'branch_id' => 'required|integer',
             'insured_name' => 'required|string|max:255',
             'nik' => 'required|string|max:20',
             'gender_id' => 'required|integer|in:1,2',
