@@ -17,6 +17,50 @@ use Throwable;
 
 class DeclarationController extends Controller
 {
+    public function asset()
+    {
+        try {
+
+            $debtCategory = DB::table('master.tb_debtor_category')
+                ->select(
+                    'id',
+                    'category_name'
+                )
+                ->orderBy('id')
+                ->get();
+
+                
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Success.',
+                'data' => [
+                    'debt_category' => $debtCategory,
+                    "gender" => [
+                        [
+                            "id" => 1,
+                            "name" => "Laki-laki"
+                        ],
+                        [
+                            "id" => 2,
+                            "name" => "Perempuan"
+                        ]
+                    ]                    
+                ]
+            ], 200);
+
+        } catch (Throwable $exception) {
+
+            Log::error($exception);
+
+            return response()->json([
+                'status' => 500,
+                'message' => 'Terjadi kesalahan! Silakan coba lagi.',
+            ], 500);
+
+        }
+    }
+
     public function insert(Request $r)
     {
         $input = $r->all();
