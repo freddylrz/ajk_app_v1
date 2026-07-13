@@ -77,5 +77,5 @@
 @endsection
 
 @push('pageScripts')
-    <script src="{{ asset('assets/js/client/klaim-formulir.js') }}"></script>
+    @vite(['resources/js/client/klaim-formulir.js'])
 @endpush

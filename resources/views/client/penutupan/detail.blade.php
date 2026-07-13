@@ -19,8 +19,8 @@
                 {{-- Kolom 1: data diri --}}
                 <div class="col-lg-4">
                     <div class="detail-item">
-                        <div class="detail-label">Kategori</div>
-                        <div class="detail-value" id="d-kategori">-</div>
+                        <div class="detail-label">Kategori Debitur</div>
+                        <div class="detail-value" id="d-kategori-debitur">-</div>
                     </div>
                     <div class="detail-item">
                         <div class="detail-label">Debitur</div>
@@ -46,21 +46,27 @@
                             <div class="detail-value" id="d-jenis-kelamin">-</div>
                         </div>
                     </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Alamat</div>
-                        <div class="detail-value" id="d-alamat">-</div>
+                    <div class="row">
+                        <div class="col-6 detail-item">
+                            <div class="detail-label">No. HP</div>
+                            <div class="detail-value" id="d-no-hp">-</div>
+                        </div>
+                        <div class="col-6 detail-item">
+                            <div class="detail-label">Email</div>
+                            <div class="detail-value" id="d-email">-</div>
+                        </div>
                     </div>
                 </div>
 
-                {{-- Kolom 2: institusi & pinjaman --}}
+                {{-- Kolom 2: instansi & pinjaman --}}
                 <div class="col-lg-4">
                     <div class="detail-item">
-                        <div class="detail-label">Kategori Debitur</div>
-                        <div class="detail-value" id="d-kategori-debitur">-</div>
+                        <div class="detail-label">Nama Instansi/Perusahaan</div>
+                        <div class="detail-value" id="d-instansi">-</div>
                     </div>
                     <div class="detail-item">
-                        <div class="detail-label">Institusi</div>
-                        <div class="detail-value" id="d-institusi">-</div>
+                        <div class="detail-label">Pangkat/Jabatan/Golongan</div>
+                        <div class="detail-value" id="d-pangkat">-</div>
                     </div>
                     <div class="row">
                         <div class="col-6 detail-item">
@@ -88,21 +94,29 @@
                     </div>
                 </div>
 
-                {{-- Kolom 3: nilai & dokumen --}}
+                {{-- Kolom 3: nilai, alamat & dokumen --}}
                 <div class="col-lg-4">
-                    <div class="detail-item">
-                        <div class="detail-label">Plafond Kredit</div>
-                        <div class="detail-value big" id="d-plafond">-</div>
-                    </div>
                     <div class="row">
+                        <div class="col-6 detail-item">
+                            <div class="detail-label">Plafond Kredit</div>
+                            <div class="detail-value big" id="d-plafond">-</div>
+                        </div>
                         <div class="col-6 detail-item">
                             <div class="detail-label">Rate Premi</div>
                             <div class="detail-value" id="d-rate">-</div>
                         </div>
-                        <div class="col-6 detail-item">
-                            <div class="detail-label">Nilai Premi</div>
-                            <div class="detail-value big" id="d-premi">-</div>
-                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Nilai Premi</div>
+                        <div class="detail-value big" id="d-premi">-</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Alamat (Sesuai KTP)</div>
+                        <div class="detail-value" id="d-alamat-ktp">-</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Alamat Tempat Tinggal</div>
+                        <div class="detail-value" id="d-alamat-domisili">-</div>
                     </div>
                     <div class="detail-item">
                         <div class="detail-label">Dokumen Terunggah</div>
@@ -115,6 +129,29 @@
                 <a href="{{ route('client.penutupan.list') }}" class="btn btn-danger">
                     <i class="ti ti-arrow-left"></i> Kembali
                 </a>
+            </div>
+        </div>
+    </div>
+
+    {{-- ══ Keterangan Kesehatan ══ --}}
+    <div class="card">
+        <div class="card-header">
+            <i class="ti ti-heart-rate-monitor"></i>
+            <h5>Keterangan Kesehatan</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th style="width:60px;">No.</th>
+                            <th>Pertanyaan</th>
+                            <th style="width:110px;">Jawaban</th>
+                            <th style="width:260px;">Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="d-kesehatan"></tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -147,5 +184,5 @@
 @endsection
 
 @push('pageScripts')
-    <script src="{{ asset('assets/js/client/penutupan-detail.js') }}"></script>
+    @vite(['resources/js/client/penutupan-detail.js'])
 @endpush

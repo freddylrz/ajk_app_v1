@@ -92,5 +92,5 @@
 @endsection
 
 @push('pageScripts')
-    <script src="{{ asset('assets/js/client/klaim-detail.js') }}"></script>
+    @vite(['resources/js/client/klaim-detail.js'])
 @endpush

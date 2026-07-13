@@ -1,19 +1,21 @@
 /**
  * ============================================================
- * PAGE: Penutupan — Input Data (Form Deklarasi)
+ * PAGE: Penutupan — Input Data (Form Deklarasi Reguler Griya)
  * Sumber data : ClientData.master
  * ============================================================
  */
+
+import { ClientData } from './data/dummy-data.js';
+import { ClientHelper } from './helpers.js';
 
 $(function () {
     const master = ClientData.master;
 
     /* ── Isi pilihan dropdown dari data master ── */
-    master.jenisKelamin.forEach(v => $('#jenis_kelamin').append(new Option(v, v)));
     master.kategoriDebitur.forEach(v => $('#kategori_debitur').append(new Option(v, v)));
-    master.institusi.forEach(v => $('#institusi').append(new Option(v, v)));
+    master.jenisKelamin.forEach(v => $('#jenis_kelamin').append(new Option(v, v)));
 
-    $('#jenis_kelamin, #kategori_debitur, #institusi').select2({
+    $('#kategori_debitur, #jenis_kelamin').select2({
         theme: 'bootstrap-5',
         width: '100%'
     });
@@ -67,7 +69,7 @@ $(function () {
         }
 
         // Simulasi rate: makin panjang tenor makin besar rate (dummy)
-        const rate = Math.min(1.5 + (tenor / 24) * 0.75, 9.5);
+        const rate = Math.min(2 + (tenor / 24) * 0.85, 9.5);
         const premi = Math.round(plafond * (rate / 100));
 
         // Periode akhir = periode awal + tenor bulan
@@ -83,12 +85,69 @@ $(function () {
         ClientHelper.notify('Perhitungan premi berhasil.');
     });
 
+    /* ── Render tabel Keterangan Kesehatan dari master ── */
+    const rowsKesehatan = master.kesehatanQuestions.map(q => `
+        <tr data-no="${q.no}" data-trigger="${q.trigger}" ${q.khususWanita ? 'data-khusus-wanita="1"' : ''}>
+            <td class="text-center fw-bold">${q.no}</td>
+            <td>${q.pertanyaan}</td>
+            <td>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="jawaban_${q.no}" id="jawaban_${q.no}_ya" value="YA">
+                    <label class="form-check-label" for="jawaban_${q.no}_ya">Ya</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="jawaban_${q.no}" id="jawaban_${q.no}_tidak" value="TIDAK">
+                    <label class="form-check-label" for="jawaban_${q.no}_tidak">Tidak</label>
+                </div>
+            </td>
+            <td>
+                <input type="text" class="form-control" id="keterangan_${q.no}" placeholder="Keterangan">
+            </td>
+        </tr>
+    `).join('');
+    $('#tbody-kesehatan').html(rowsKesehatan);
+
+    /* ── Wajibkan Keterangan hanya saat jawaban = trigger pertanyaan ── */
+    $('#tbody-kesehatan').on('change', 'input[type="radio"]', function () {
+        const row = $(this).closest('tr');
+        const trigger = row.data('trigger');
+        const keteranganInput = row.find('input[id^="keterangan_"]');
+        keteranganInput.prop('required', this.value === trigger);
+    });
+
+    /* ── Pertanyaan No. 5 (khusus wanita) menyesuaikan Jenis Kelamin ── */
+    $('#jenis_kelamin').on('change', function () {
+        const row = $('#tbody-kesehatan tr[data-khusus-wanita="1"]');
+        const isPerempuan = $(this).val() === 'Perempuan';
+
+        row.find('input[type="radio"], input[type="text"]').prop('disabled', !isPerempuan);
+        if (!isPerempuan) {
+            row.find('input[type="radio"]').prop('checked', false).prop('required', false);
+            row.find('input[type="text"]').val('-').prop('required', false);
+        } else {
+            row.find('input[type="text"]').val('');
+        }
+    });
+    $('#jenis_kelamin').trigger('change');
+
     /* ── Simpan (dummy) ── */
     $('#form-deklarasi').on('submit', function (e) {
         e.preventDefault();
 
         if ($('#output_premi').text() === '-') {
             ClientHelper.notify('Silakan klik tombol Hitung terlebih dahulu sebelum menyimpan.', 'warning');
+            return;
+        }
+
+        let kesehatanLengkap = true;
+        $('#tbody-kesehatan tr').each(function () {
+            if ($(this).find('input[type="radio"]').prop('disabled')) return;
+            const terpilih = $(this).find('input[type="radio"]:checked').val();
+            if (!terpilih) kesehatanLengkap = false;
+        });
+
+        if (!kesehatanLengkap) {
+            ClientHelper.notify('Mohon lengkapi seluruh jawaban Keterangan Kesehatan.', 'warning');
             return;
         }
 
