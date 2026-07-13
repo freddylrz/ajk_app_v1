@@ -9,6 +9,9 @@
  * ============================================================
  */
 
+import { ClientData } from './data/dummy-data.js';
+import { ClientHelper } from './helpers.js';
+
 $(function () {
     $('#table-klaim').DataTable({
         data: ClientData.klaim,

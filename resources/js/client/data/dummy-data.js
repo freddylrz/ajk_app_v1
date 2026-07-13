@@ -10,7 +10,7 @@
  * ============================================================
  */
 
-const ClientData = {
+export const ClientData = {
 
     /* ── Info user login ─────────────────────────────────── */
     "user": {
@@ -40,105 +40,140 @@ const ClientData = {
     },
 
     /* ── Master pilihan form ─────────────────────────────── */
+    /* Kategori Debitur mengikuti master.tb_debtor_category (data asli). */
     "master": {
         "jenisKelamin": ["Laki-laki", "Perempuan"],
-        "kategoriDebitur": ["Pensiunan", "Calon Pensiunan", "Pra Pensiun"],
-        "institusi": [
-            "Pensiunan PNS",
-            "Calon Pensiunan PNS",
-            "Pensiunan TNI/POLRI",
-            "Pensiunan BUMN",
-            "Janda/Duda Pensiunan"
+        "kategoriDebitur": ["Pegawai Swasta", "ASN", "BUMN", "BUMD", "TNI", "POLRI", "Lainnya"],
+
+        /* Kuesioner Keterangan Kesehatan (SPK). "trigger" = jawaban yang
+           mewajibkan kolom Keterangan diisi. khususWanita menandai
+           pertanyaan yang hanya berlaku untuk debitur perempuan. */
+        "kesehatanQuestions": [
+            { "no": 1, "pertanyaan": "Apakah Anda sekarang dalam keadaan sehat? Jika \"Tidak\", jelaskan!", "trigger": "TIDAK" },
+            { "no": 2, "pertanyaan": "Apakah dalam 5 tahun terakhir Anda pernah dioperasi/dirawat di Rumah Sakit atau dalam masa pengobatan/perawatan yang membutuhkan obat-obatan dalam masa lama? Jika \"Ya\", jelaskan!", "trigger": "YA" },
+            { "no": 3, "pertanyaan": "Apakah berat badan Anda berubah dalam 12 bulan terakhir ini? Jika \"Ya\", jelaskan!", "trigger": "YA" },
+            { "no": 4, "pertanyaan": "Apakah Anda pernah atau sedang menderita penyakit: cacat, tumor/kanker, TBC, asma, kencing manis, hati, ginjal, stroke, tekanan darah tinggi, gangguan jiwa atau penyakit lainnya? Jika \"Ya\", jelaskan!", "trigger": "YA" },
+            { "no": 5, "pertanyaan": "Khusus untuk wanita: Apakah Anda sedang hamil? Jika \"Ya\", berapa minggu usia kandungan?", "trigger": "YA", "khususWanita": true }
         ]
     },
 
-    /* ── Data penutupan (list data) ──────────────────────── */
+    /* ── Data penutupan Reguler Griya (list data) ─────────── */
     "penutupan": [
         {
             "id": 1,
-            "kategori": "NON Grace Period",
             "kantor": "KC KUNINGAN",
-            "debitur": "DEDI SUBANDI",
-            "tanggalLahir": "29/10/1963",
-            "umur": "62 Tahun",
-            "noKtp": "3210120709630001",
+            "debitur": "BUDI SANTOSO",
+            "kategoriDebitur": "ASN",
+            "namaInstansi": "Pemerintah Kabupaten Indramayu",
+            "tanggalLahir": "12/05/1985",
+            "umur": "41 Tahun",
+            "pangkatJabatan": "Penata Muda / III-a",
+            "noKtp": "3212121205850001",
             "jenisKelamin": "Laki-laki",
-            "alamat": "JL. SILIWANGI NO. 12 RT 001 RW 003 KEL. PURWAWINANGUN KEC. KUNINGAN KAB. KUNINGAN",
-            "kategoriDebitur": "Calon Pensiunan",
-            "institusi": "Calon Pensiunan PNS",
+            "noHp": "081234567890",
+            "email": "budi.santoso@gmail.com",
+            "alamatKtp": "JL. SUDIRMAN NO. 10 RT 001 RW 002 KEL. LEMAHMEKAR KEC. INDRAMAYU KAB. INDRAMAYU",
+            "alamatDomisili": "PERUM GRIYA ASRI BLOK C NO. 5 KEC. INDRAMAYU KAB. INDRAMAYU",
             "noRek": "0",
-            "noPk": "103/KNG/PK-FLEKSI PENSIUN/2021",
-            "tenor": 48,
-            "periode": "16/04/2021 - 16/04/2025",
-            "plafondKredit": 100000000,
-            "ratePremi": 1.9,
-            "nilaiPremi": 1900000,
-            "status": "REVISI INPUT DATA DEBITUR",
-            "statusType": "warning",
-            "inputDate": "16-04-2021 09:12",
-            "noPolis": "015920210416009900",
-            "files": ["ktp-dedi.jpeg", "ttd-pk-dedi.jpeg", "berdiri-depan-dedi.jpeg", "berdiri-samping-dedi.jpeg"],
+            "noPk": "045/IDM/PK-GRIYA/2024",
+            "tenor": 180,
+            "periode": "15/03/2024 - 15/03/2039",
+            "plafondKredit": 350000000,
+            "ratePremi": 6.2,
+            "nilaiPremi": 21700000,
+            "status": "MENUNGGU VALIDASI SPV",
+            "statusType": "info",
+            "inputDate": "15-03-2024 10:20",
+            "noPolis": "-",
+            "kesehatan": [
+                { "no": 1, "jawaban": "YA", "keterangan": "-" },
+                { "no": 2, "jawaban": "TIDAK", "keterangan": "-" },
+                { "no": 3, "jawaban": "TIDAK", "keterangan": "-" },
+                { "no": 4, "jawaban": "TIDAK", "keterangan": "-" },
+                { "no": 5, "jawaban": "-", "keterangan": "-" }
+            ],
+            "files": ["ktp-budi.jpeg", "pk-depan-budi.jpeg", "pk-samping-budi.jpeg", "spk-budi.pdf"],
             "logStatus": [
-                { "no": 1, "status": "MENUNGGU VALIDASI SPV", "keterangan": "-", "tanggal": "16-04-2021 09:12" },
-                { "no": 2, "status": "REVISI INPUT DATA DEBITUR", "keterangan": "Nomor rekening pinjaman belum diisi", "tanggal": "17-04-2021 10:30" }
+                { "no": 1, "status": "MENUNGGU VALIDASI SPV", "keterangan": "-", "tanggal": "15-03-2024 10:20" }
             ]
         },
         {
             "id": 2,
-            "kategori": "NON Grace Period",
             "kantor": "KC KUNINGAN",
-            "debitur": "ACENG JUNANTA",
-            "tanggalLahir": "07/09/1965",
-            "umur": "58 Tahun",
-            "noKtp": "3210120709650001",
-            "jenisKelamin": "Laki-laki",
-            "alamat": "BLOK SABTU RT 002 RW 002 DESA GANDU KEC DAWUAN KAB MAJALENGKA",
-            "kategoriDebitur": "Calon Pensiunan",
-            "institusi": "Calon Pensiunan PNS",
-            "noRek": "0",
-            "noPk": "0",
-            "tenor": 180,
-            "periode": "20/06/2024 - 20/06/2039",
-            "plafondKredit": 418000000,
-            "ratePremi": 7.1,
-            "nilaiPremi": 29678000,
-            "status": "MENUNGGU VALIDASI SPV",
-            "statusType": "info",
-            "inputDate": "21-06-2024 16:39",
+            "debitur": "RATNA DEWI KUSUMA",
+            "kategoriDebitur": "Pegawai Swasta",
+            "namaInstansi": "PT Maju Bersama Sejahtera",
+            "tanggalLahir": "22/08/1990",
+            "umur": "35 Tahun",
+            "pangkatJabatan": "Staff Keuangan",
+            "noKtp": "3212126208900002",
+            "jenisKelamin": "Perempuan",
+            "noHp": "082198765432",
+            "email": "ratna.dewi@example.com",
+            "alamatKtp": "JL. MERDEKA NO. 25 RT 002 RW 001 KEL. KARANGANYAR KEC. INDRAMAYU KAB. INDRAMAYU",
+            "alamatDomisili": "JL. MERDEKA NO. 25 RT 002 RW 001 KEL. KARANGANYAR KEC. INDRAMAYU KAB. INDRAMAYU",
+            "noRek": "9876543210",
+            "noPk": "078/IDM/PK-GRIYA/2024",
+            "tenor": 120,
+            "periode": "02/05/2024 - 02/05/2034",
+            "plafondKredit": 275000000,
+            "ratePremi": 5.8,
+            "nilaiPremi": 15950000,
+            "status": "REVISI INPUT DATA DEBITUR",
+            "statusType": "warning",
+            "inputDate": "02-05-2024 14:05",
             "noPolis": "-",
-            "files": ["66754a4f3d9c8.jpeg", "66754a4f3ee4b.jpeg", "66754a4f4063b.jpeg", "66754a4f41f09.jpeg"],
+            "kesehatan": [
+                { "no": 1, "jawaban": "YA", "keterangan": "-" },
+                { "no": 2, "jawaban": "TIDAK", "keterangan": "-" },
+                { "no": 3, "jawaban": "YA", "keterangan": "Naik 4 kg dalam 6 bulan terakhir" },
+                { "no": 4, "jawaban": "TIDAK", "keterangan": "-" },
+                { "no": 5, "jawaban": "TIDAK", "keterangan": "-" }
+            ],
+            "files": ["ktp-ratna.jpeg", "pk-depan-ratna.jpeg", "pk-samping-ratna.jpeg", "spk-ratna.pdf"],
             "logStatus": [
-                { "no": 1, "status": "MENUNGGU VALIDASI SPV", "keterangan": "-", "tanggal": "21-06-2024 16:39" }
+                { "no": 1, "status": "MENUNGGU VALIDASI SPV", "keterangan": "-", "tanggal": "02-05-2024 14:05" },
+                { "no": 2, "status": "REVISI INPUT DATA DEBITUR", "keterangan": "Surat Pernyataan Kesehatan belum ditandatangani", "tanggal": "03-05-2024 09:15" }
             ]
         },
         {
             "id": 3,
-            "kategori": "Grace Period",
             "kantor": "KC KUNINGAN",
-            "debitur": "SITI RAHAYU",
-            "tanggalLahir": "15/02/1962",
-            "umur": "64 Tahun",
-            "noKtp": "3210125502620002",
-            "jenisKelamin": "Perempuan",
-            "alamat": "JL. RAYA CILIMUS NO. 45 RT 003 RW 001 KEC. CILIMUS KAB. KUNINGAN",
-            "kategoriDebitur": "Pensiunan",
-            "institusi": "Pensiunan PNS",
-            "noRek": "1234567890",
-            "noPk": "211/KNG/PK-FLEKSI PENSIUN/2024",
-            "tenor": 120,
-            "periode": "05/01/2025 - 05/01/2035",
-            "plafondKredit": 250000000,
-            "ratePremi": 5.25,
-            "nilaiPremi": 13125000,
+            "debitur": "AGUS PRASETYO",
+            "kategoriDebitur": "BUMN",
+            "namaInstansi": "PT Bank Negara Indonesia (Persero) Tbk",
+            "tanggalLahir": "03/11/1980",
+            "umur": "45 Tahun",
+            "pangkatJabatan": "Kepala Unit",
+            "noKtp": "3212120311800003",
+            "jenisKelamin": "Laki-laki",
+            "noHp": "085711223344",
+            "email": "agus.prasetyo@bni.co.id",
+            "alamatKtp": "JL. PAHLAWAN NO. 8 RT 003 RW 002 KEL. PAOMAN KEC. INDRAMAYU KAB. INDRAMAYU",
+            "alamatDomisili": "JL. PAHLAWAN NO. 8 RT 003 RW 002 KEL. PAOMAN KEC. INDRAMAYU KAB. INDRAMAYU",
+            "noRek": "5566778899",
+            "noPk": "012/IDM/PK-GRIYA/2023",
+            "tenor": 180,
+            "periode": "10/01/2023 - 10/01/2038",
+            "plafondKredit": 520000000,
+            "ratePremi": 6.5,
+            "nilaiPremi": 33800000,
             "status": "POLIS TERBIT",
             "statusType": "success",
-            "inputDate": "05-01-2025 11:05",
-            "noPolis": "015920250105112233",
-            "files": ["ktp-siti.jpeg", "ttd-pk-siti.jpeg", "berdiri-depan-siti.jpeg", "berdiri-samping-siti.jpeg"],
+            "inputDate": "10-01-2023 09:00",
+            "noPolis": "015920230110090011",
+            "kesehatan": [
+                { "no": 1, "jawaban": "YA", "keterangan": "-" },
+                { "no": 2, "jawaban": "TIDAK", "keterangan": "-" },
+                { "no": 3, "jawaban": "TIDAK", "keterangan": "-" },
+                { "no": 4, "jawaban": "TIDAK", "keterangan": "-" },
+                { "no": 5, "jawaban": "-", "keterangan": "-" }
+            ],
+            "files": ["ktp-agus.jpeg", "pk-depan-agus.jpeg", "pk-samping-agus.jpeg", "spk-agus.pdf"],
             "logStatus": [
-                { "no": 1, "status": "MENUNGGU VALIDASI SPV", "keterangan": "-", "tanggal": "05-01-2025 11:05" },
-                { "no": 2, "status": "DIVALIDASI SPV", "keterangan": "Data lengkap", "tanggal": "06-01-2025 08:20" },
-                { "no": 3, "status": "POLIS TERBIT", "keterangan": "No. Polis 015920250105112233", "tanggal": "08-01-2025 14:45" }
+                { "no": 1, "status": "MENUNGGU VALIDASI SPV", "keterangan": "-", "tanggal": "10-01-2023 09:00" },
+                { "no": 2, "status": "DIVALIDASI SPV", "keterangan": "Data lengkap", "tanggal": "11-01-2023 08:30" },
+                { "no": 3, "status": "POLIS TERBIT", "keterangan": "No. Polis 015920230110090011", "tanggal": "13-01-2023 15:10" }
             ]
         }
     ],

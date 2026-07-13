@@ -13,6 +13,17 @@ export default defineConfig({
                  'resources/js/initialize.js',
                  'resources/js/utilities/management_branch.js',
                  'resources/js/utilities/management_user.js',
+
+                 // Area client — 1 entry per halaman (dipanggil lewat @vite() di blade)
+                 'resources/js/client/auth.js',
+                 'resources/js/client/dashboard.js',
+                 'resources/js/client/penutupan-input.js',
+                 'resources/js/client/penutupan-list.js',
+                 'resources/js/client/penutupan-detail.js',
+                 'resources/js/client/klaim-laporan-awal.js',
+                 'resources/js/client/klaim-formulir.js',
+                 'resources/js/client/klaim-data.js',
+                 'resources/js/client/klaim-detail.js',
                 ],
             refresh: true,
         }),

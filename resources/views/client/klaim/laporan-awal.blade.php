@@ -78,5 +78,5 @@
 @endsection
 
 @push('pageScripts')
-    <script src="{{ asset('assets/js/client/klaim-laporan-awal.js') }}"></script>
+    @vite(['resources/js/client/klaim-laporan-awal.js'])
 @endpush

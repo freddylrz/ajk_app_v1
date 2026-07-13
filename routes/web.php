@@ -9,6 +9,11 @@ Route::get('/', function () {
     return view('home');
 })->name('');
 
+// Halaman login — jika sudah punya token, langsung ke dashboard client
+Route::get('/login', function () {
+    return view('auth.login');
+})->middleware(RedirectIfAccessTokenExist::class)->name('login');
+
 /*
 |--------------------------------------------------------------------------
 | Route per role
@@ -28,7 +33,10 @@ Route::middleware([RedirectIfAccessTokenExist::class])->group(function () {
     })->name('login');
 });
 
+// Route client SEMENTARA tidak dibungkus CheckAccessToken (login API
+// sedang error di sisi DB, lihat catatan di routes/client.php).
+require __DIR__ . '/client.php';
+
 Route::middleware([CheckAccessToken::class])->group(function () {
-    require __DIR__ . '/client.php';
     require __DIR__ . '/tib.php';
 });

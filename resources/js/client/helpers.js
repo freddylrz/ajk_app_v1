@@ -5,7 +5,7 @@
  * ============================================================
  */
 
-const ClientHelper = {
+export const ClientHelper = {
 
     /** Format angka jadi format ribuan: 1000000 → "1,000,000" */
     formatNumber(value) {

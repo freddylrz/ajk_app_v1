@@ -9,6 +9,9 @@
  * ============================================================
  */
 
+import { ClientData } from './data/dummy-data.js';
+import { ClientHelper } from './helpers.js';
+
 $(function () {
     const data = ClientData.penutupan;
 
@@ -19,13 +22,13 @@ $(function () {
                 data: null,
                 render: (d, type, row, meta) => meta.row + 1
             },
-            { data: 'kategori' },
+            { data: 'kategoriDebitur' },
             {
                 data: 'debitur',
                 render: d => `<span class="fw-bold">${d}</span>`
             },
             { data: 'tanggalLahir' },
-            { data: 'institusi' },
+            { data: 'namaInstansi' },
             { data: 'noPk' },
             { data: 'tenor', className: 'text-center' },
             { data: 'periode' },
