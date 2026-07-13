@@ -1,8 +1,9 @@
 /**
  * ============================================================
  * PAGE: Penutupan — Input Data (Form Deklarasi Reguler Griya)
- * API  : GET  /api/v1/client/declaration/asset  → opsi Kategori Debitur & Jenis Kelamin
- *        POST /api/v1/client/declaration/insert → simpan deklarasi baru
+ * API  : GET  /api/v1/client/declaration/asset               → opsi Kategori Debitur & Jenis Kelamin
+ *        POST /api/v1/client/declaration/premium-calculation → hitung premi
+ *        POST /api/v1/client/declaration/insert               → simpan deklarasi baru
  * ============================================================
  */
 
@@ -60,50 +61,63 @@ $(function () {
         $('#umur').val(umur ? umur + ' Tahun' : '');
     });
 
-    /* ── Hitung premi: memanggil API premi-calculation ──
-       Endpoint /api/v1/client/declaration/premi-calculation belum
-       diimplementasikan di server. Pemanggilannya disiapkan di
-       bawah ini (di-comment) supaya tinggal diaktifkan begitu
-       endpoint tersedia — untuk sementara hasil dibiarkan kosong. */
+    /* ── Format tanggal dd-mm-yyyy → yyyy-mm-dd (dibutuhkan API) ── */
+    function toIsoDate(val) {
+        if (!val) return '';
+        const [d, m, y] = val.split('-');
+        return `${y}-${m}-${d}`;
+    }
+
+    /* ── Hitung premi: memanggil API premium-calculation ── */
     $('#btn-hitung').on('click', async function () {
         const tenor = parseInt($('#tenor').val(), 10);
         const periodeAwal = $('#periode_awal').val();
+        const tanggalLahir = $('#tanggal_lahir').val();
         const plafond = parseInt($('#plafond_kredit').val().replace(/[^\d]/g, ''), 10);
+
+        if (!tanggalLahir) {
+            ClientHelper.notify('Mohon lengkapi Tanggal Lahir terlebih dahulu.', 'warning');
+            return;
+        }
 
         if (!tenor || !periodeAwal || !plafond) {
             ClientHelper.notify('Mohon lengkapi Tenor, Periode Awal, dan Plafond Kredit terlebih dahulu.', 'warning');
             return;
         }
 
-        // TODO: aktifkan begitu /api/v1/client/declaration/premi-calculation tersedia.
-        // try {
-        //     const res = await ClientHelper.apiFetch('/api/v1/client/declaration/premi-calculation', {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify({
-        //             tenor: tenor,
-        //             start_date: toIsoDate(periodeAwal),
-        //             plafond: plafond
-        //         })
-        //     });
-        //     const json = await res.json();
-        //
-        //     if (!res.ok) {
-        //         ClientHelper.notify(json.message || 'Gagal menghitung premi.', 'warning');
-        //         return;
-        //     }
-        //
-        //     $('#output_periode').text(json.data.periode);
-        //     $('#output_rate').text(json.data.rate + ' %');
-        //     $('#output_premi').text(ClientHelper.formatIDR(json.data.premium));
-        //     $('#rate').val(json.data.rate);
-        //     $('#premium').val(json.data.premium);
-        // } catch (err) {
-        //     console.error('Gagal memanggil /declaration/premi-calculation:', err);
-        //     ClientHelper.notify('Tidak dapat terhubung ke server.', 'danger');
-        // }
+        const btn = $(this);
+        btn.prop('disabled', true);
 
-        ClientHelper.notify('Fitur hitung premi belum tersedia di server.', 'warning');
+        try {
+            const res = await ClientHelper.apiFetch('/api/v1/client/declaration/premium-calculation', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    birth_date: toIsoDate(tanggalLahir),
+                    start_date: toIsoDate(periodeAwal),
+                    tenor: tenor,
+                    plafond: plafond
+                })
+            });
+            const json = await res.json();
+
+            if (!res.ok) {
+                ClientHelper.notify(json.message || 'Gagal menghitung premi.', 'warning');
+                return;
+            }
+
+            $('#output_periode').text(`${periodeAwal} s/d ${json.data.end_date}`);
+            $('#output_rate').text(json.data.rate + ' ‰');
+            $('#output_premi').text('Rp ' + json.data.premium);
+            $('#rate').val(json.data.rate);
+            $('#premium').val(json.data.premium);
+            $('#end_date_computed').val(toIsoDate(json.data.end_date));
+        } catch (err) {
+            console.error('Gagal memanggil /declaration/premium-calculation:', err);
+            ClientHelper.notify('Tidak dapat terhubung ke server.', 'danger');
+        } finally {
+            btn.prop('disabled', false);
+        }
     });
 
     /* ── Checkbox No. Rek & No. PK: dicentang = sudah punya nomor (bisa diisi) ── */
@@ -141,16 +155,14 @@ $(function () {
         this.value = angka ? ClientHelper.formatNumber(parseInt(angka, 10)) : '';
     });
 
-    /* ── Format tanggal dd-mm-yyyy → yyyy-mm-dd (dibutuhkan API) ── */
-    function toIsoDate(val) {
-        if (!val) return '';
-        const [d, m, y] = val.split('-');
-        return `${y}-${m}-${d}`;
-    }
-
     /* ── Simpan ke API ── */
     $('#form-deklarasi').on('submit', async function (e) {
         e.preventDefault();
+
+        if (!$('#rate').val() || !$('#premium').val()) {
+            ClientHelper.notify('Silakan klik tombol Hitung pada bagian Perhitungan Premi terlebih dahulu.', 'warning');
+            return;
+        }
 
         const submitBtn = $(this).find('button[type="submit"]');
         submitBtn.prop('disabled', true);
@@ -177,15 +189,7 @@ $(function () {
                 pk_no: $('#no_pk').val(),
                 tenor: $('#tenor').val(),
                 start_date: toIsoDate($('#periode_awal').val()),
-                end_date: (() => {
-                    const tenor = parseInt($('#tenor').val(), 10);
-                    const periodeAwal = $('#periode_awal').val();
-                    if (!tenor || !periodeAwal) return '';
-                    const [d, m, y] = periodeAwal.split('-');
-                    const akhir = new Date(parseInt(y, 10), parseInt(m, 10) - 1 + tenor, parseInt(d, 10));
-                    const pad = n => String(n).padStart(2, '0');
-                    return `${akhir.getFullYear()}-${pad(akhir.getMonth() + 1)}-${pad(akhir.getDate())}`;
-                })(),
+                end_date: $('#end_date_computed').val(),
                 plafond: $('#plafond_kredit').val().replace(/[^\d]/g, ''),
                 rate: $('#rate').val(),
                 premium: $('#premium').val().replace(/[^\d]/g, ''),

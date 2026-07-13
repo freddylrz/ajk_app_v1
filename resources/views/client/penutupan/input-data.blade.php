@@ -204,9 +204,10 @@
                     <strong id="output_premi">-</strong>
                 </div>
             </div>
-            {{-- Nilai rate & premium hasil hitung disimpan di sini untuk dikirim saat submit --}}
+            {{-- Nilai rate, premium & end_date hasil hitung disimpan di sini untuk dikirim saat submit --}}
             <input type="hidden" id="rate" name="rate">
             <input type="hidden" id="premium" name="premium">
+            <input type="hidden" id="end_date_computed" name="end_date_computed">
         </div>
     </div>
 
