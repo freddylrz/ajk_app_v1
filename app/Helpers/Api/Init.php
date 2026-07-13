@@ -22,13 +22,18 @@ Class Init
             ->orderByDesc('declaration_no')
             ->value('declaration_no');
 
-        $running = empty($lastNo)
-            ? 1
-            : ((int) substr($lastNo, -6)) + 1;
+        $running = empty($lastNo) ? 1 : ((int) substr($lastNo, -6)) + 1;
 
         return $prefix . str_pad($running, 6, '0', STR_PAD_LEFT);
     }
-    
+
+    public static function getBranchId()
+    {
+        return DB::table('user_branch')
+            ->where('user_id', Auth::id())
+            ->value('branch_id');
+    }
+
     public static function decodeFile($data)
     {
         try {
