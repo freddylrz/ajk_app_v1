@@ -19,10 +19,10 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Kategori</th>
+                        <th>Kategori Debitur</th>
                         <th>Debitur</th>
                         <th>Tanggal Lahir</th>
-                        <th>Institusi</th>
+                        <th>Nama Instansi</th>
                         <th>No. PK</th>
                         <th>Tenor</th>
                         <th>Periode</th>
@@ -50,5 +50,5 @@
 @endsection
 
 @push('pageScripts')
-    <script src="{{ asset('assets/js/client/penutupan-list.js') }}"></script>
+    @vite(['resources/js/client/penutupan-list.js'])
 @endpush

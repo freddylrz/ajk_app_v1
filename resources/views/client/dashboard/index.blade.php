@@ -124,5 +124,5 @@
 
 @push('pageScripts')
     <script src="{{ asset('assets/js/plugins/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('assets/js/client/dashboard.js') }}"></script>
+    @vite(['resources/js/client/dashboard.js'])
 @endpush
