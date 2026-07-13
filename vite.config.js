@@ -20,6 +20,7 @@ export default defineConfig({
                  'resources/js/client/penutupan-list.js',
                  'resources/js/client/penutupan-terbit-polis.js',
                  'resources/js/client/penutupan-detail.js',
+                 'resources/js/client/penutupan-update.js',
                  'resources/js/client/klaim-laporan-awal.js',
                  'resources/js/client/klaim-formulir.js',
                  'resources/js/client/klaim-data.js',

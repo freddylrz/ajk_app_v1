@@ -66,6 +66,23 @@ export const ClientHelper = {
         return new URLSearchParams(window.location.search).get(name);
     },
 
+    /**
+     * Ambil daftar role user yang login, mis. ["OPR"] atau ["SPV"],
+     * dari GET /api/v1/auth/user-info. Dipakai untuk menampilkan/menyembunyikan
+     * aksi Edit (khusus OPR) & Validasi (khusus SPV) di halaman detail.
+     */
+    async getRoles() {
+        try {
+            const res = await this.apiFetch('/api/v1/auth/user-info');
+            const json = await res.json();
+            if (!res.ok) return [];
+            return json.data?.user_info?.roles || [];
+        } catch (err) {
+            console.error('Gagal memuat /auth/user-info:', err);
+            return [];
+        }
+    },
+
     /** Ambil nilai cookie berdasarkan nama, mis. ClientHelper.getCookie('__ajk-tib-at') */
     getCookie(name) {
         const match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));

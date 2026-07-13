@@ -39,6 +39,9 @@ Route::prefix('client')->name('client.')
             Route::get('/detail/{id}', function (string $id) {
                 return view('client.penutupan.detail', ['id' => $id]);
             })->name('detail');
+            Route::get('/update/{id}', function (string $id) {
+                return view('client.penutupan.update-data', ['id' => $id]);
+            })->name('update');
         });
 
         // ── Klaim ─────────────────────────────────────────────────
