@@ -66,6 +66,42 @@ export const ClientHelper = {
         return new URLSearchParams(window.location.search).get(name);
     },
 
+    /** Ambil nilai cookie berdasarkan nama, mis. ClientHelper.getCookie('__ajk-tib-at') */
+    getCookie(name) {
+        const match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+        return match ? decodeURIComponent(match[1]) : null;
+    },
+
+    /**
+     * Panggil endpoint /api/v1/... dengan Bearer token dari cookie
+     * __ajk-tib-at. Dekripsi token dilakukan middleware di sisi server.
+     */
+    async apiFetch(url, options = {}) {
+        const token = this.getCookie('__ajk-tib-at');
+        return fetch(url, {
+            ...options,
+            headers: {
+                'Accept': 'application/json',
+                ...(token ? { 'Authorization': 'Bearer ' + token } : {}),
+                ...(options.headers || {})
+            }
+        });
+    },
+
+    /** File (upload) -> data URI base64, format yang diterima Init::decodeFile() di backend */
+    fileToDataUri(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                // Selipkan nama file supaya backend bisa mendeteksi nama aslinya
+                const result = reader.result.replace(';base64,', `;name=${encodeURIComponent(file.name)};base64,`);
+                resolve(result);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    },
+
     /** Notifikasi sukses/gagal — modal SweetAlert2 biasa (bukan toast) */
     notify(message, type = 'success') {
         const icons = {

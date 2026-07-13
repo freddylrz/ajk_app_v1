@@ -5,6 +5,7 @@
 
 @section('content')
 
+<div class="pct-body">
 {{-- ── Kartu ringkasan (pola social-widget-card, sama seperti dashboard admin) ── --}}
 <div class="row">
     <div class="col-md-3 col-sm-6 col-xs-12">
@@ -47,7 +48,7 @@
         <div class="card">
             <div class="card-header">
                 <i class="ti ti-chart-bar"></i>
-                <h5>Penutupan Per Bulan {{ date('Y') }}</h5>
+                <h3>Penutupan Per Bulan {{ date('Y') }}</h3>
             </div>
             <div class="card-body">
                 <div id="chart-penutupan"></div>
@@ -60,7 +61,7 @@
         <div class="card">
             <div class="card-header">
                 <i class="ti ti-bolt"></i>
-                <h5>Akses Cepat</h5>
+                <h3>Akses Cepat</h3>
             </div>
             <div class="card-body d-grid gap-3">
                 <a href="{{ route('client.penutupan.input') }}" class="btn btn-primary btn-lg">
@@ -84,11 +85,11 @@
 <div class="card">
     <div class="card-header">
         <i class="ti ti-history"></i>
-        <h5>Klaim Terbaru</h5>
+        <h3>Klaim Terbaru</h3>
     </div>
     <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-striped" id="table-klaim-terbaru" style="width:100%">
+        <div class="table-responsive dt-responsive">
+            <table class="table table-striped table-bordered nowrap" id="table-klaim-terbaru" style="width:100%">
                 <thead>
                     <tr>
                         <th>Klaim ID</th>
@@ -103,10 +104,11 @@
         </div>
     </div>
 </div>
+</div>
 
 @endsection
 
-@push('pageScripts')
+@push('levelPluginsJs')
     <script src="{{ asset('assets/js/plugins/apexcharts.min.js') }}"></script>
     @vite(['resources/js/client/dashboard.js'])
 @endpush

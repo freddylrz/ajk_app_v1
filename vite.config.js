@@ -15,7 +15,6 @@ export default defineConfig({
                  'resources/js/utilities/management_user.js',
 
                  // Area client — 1 entry per halaman (dipanggil lewat @vite() di blade)
-                 'resources/js/client/auth.js',
                  'resources/js/client/dashboard.js',
                  'resources/js/client/penutupan-input.js',
                  'resources/js/client/penutupan-list.js',

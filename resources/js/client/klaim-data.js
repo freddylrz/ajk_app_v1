@@ -1,44 +1,28 @@
 /**
  * ============================================================
  * PAGE: Klaim — Data Klaim
- * Sumber data : ClientData.klaim
- *
- * Catatan: data di-supply langsung ke DataTables lewat opsi
- * `data` + `columns` (bukan injeksi HTML manual) supaya jumlah
- * kolom selalu cocok dan tidak memicu error DataTables.
+ * API  : belum ada endpoint klaim di sisi server (ClaimController
+ *        masih kosong), jadi tabel dibiarkan kosong.
  * ============================================================
  */
 
-import { ClientData } from './data/dummy-data.js';
 import { ClientHelper } from './helpers.js';
 
 $(function () {
+    // TODO: sambungkan ke endpoint daftar klaim begitu tersedia.
     $('#table-klaim').DataTable({
-        data: ClientData.klaim,
+        data: [],
         columns: [
             { data: 'id' },
-            {
-                data: 'klaimId',
-                render: d => `<span class="fw-bold">${d}</span>`
-            },
-            {
-                data: 'debitur',
-                render: d => `<span class="fw-bold">${d}</span>`
-            },
+            { data: 'klaimId' },
+            { data: 'debitur' },
             { data: 'noPolis' },
             { data: 'cabang' },
             { data: 'tanggalKematian' },
-            {
-                data: 'nilaiKlaim',
-                className: 'text-end fw-bold',
-                render: d => ClientHelper.formatNumber(d)
-            },
+            { data: 'nilaiKlaim', className: 'text-end fw-bold' },
             { data: 'tanggalLapor' },
             { data: 'deskripsi' },
-            {
-                data: null,
-                render: k => ClientHelper.statusLink(k.status, k.statusType, '/client/klaim/detail/' + k.id)
-            }
+            { data: null }
         ],
         language: ClientHelper.dataTableLang,
         pageLength: 10,
