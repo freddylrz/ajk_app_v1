@@ -56,7 +56,7 @@ $(function () {
         $(inputSelector).on('change', function () {
             const list = $(listSelector);
             if (!this.files || this.files.length === 0) {
-                list.html('<li class="upload-file-empty">Belum ada file dipilih</li>');
+                list.html('<li class="text-muted fst-italic">Belum ada file dipilih</li>');
                 return;
             }
             list.html(Array.from(this.files).map(f => `

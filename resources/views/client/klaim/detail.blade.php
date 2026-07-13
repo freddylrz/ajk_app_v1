@@ -17,40 +17,40 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-lg-4">
-                    <div class="detail-item">
-                        <div class="detail-label">Debitur</div>
-                        <div class="detail-value big" id="d-debitur">-</div>
+                    <div class="mb-3">
+                        <small class="text-muted d-block">Debitur</small>
+                        <strong class="fs-5" id="d-debitur">-</strong>
                     </div>
-                    <div class="detail-item">
-                        <div class="detail-label">No. Polis</div>
-                        <div class="detail-value" id="d-no-polis">-</div>
+                    <div class="mb-3">
+                        <small class="text-muted d-block">No. Polis</small>
+                        <strong id="d-no-polis">-</strong>
                     </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Cabang</div>
-                        <div class="detail-value" id="d-cabang">-</div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="detail-item">
-                        <div class="detail-label">Tanggal Kematian</div>
-                        <div class="detail-value" id="d-tanggal-kematian">-</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Tanggal Lapor</div>
-                        <div class="detail-value" id="d-tanggal-lapor">-</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Deskripsi</div>
-                        <div class="detail-value" id="d-deskripsi">-</div>
+                    <div class="mb-3">
+                        <small class="text-muted d-block">Cabang</small>
+                        <strong id="d-cabang">-</strong>
                     </div>
                 </div>
                 <div class="col-lg-4">
-                    <div class="detail-item">
-                        <div class="detail-label">Nilai Klaim</div>
-                        <div class="detail-value big" id="d-nilai-klaim">-</div>
+                    <div class="mb-3">
+                        <small class="text-muted d-block">Tanggal Kematian</small>
+                        <strong id="d-tanggal-kematian">-</strong>
                     </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Dokumen Terunggah</div>
+                    <div class="mb-3">
+                        <small class="text-muted d-block">Tanggal Lapor</small>
+                        <strong id="d-tanggal-lapor">-</strong>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted d-block">Deskripsi</small>
+                        <strong id="d-deskripsi">-</strong>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="mb-3">
+                        <small class="text-muted d-block">Nilai Klaim</small>
+                        <strong class="fs-5" id="d-nilai-klaim">-</strong>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted d-block">Dokumen Terunggah</small>
                         <ul class="list-unstyled mt-2 mb-0" id="d-dokumen"></ul>
                     </div>
                 </div>
@@ -72,7 +72,7 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-striped log-table" style="width:100%">
+                <table class="table table-striped" style="width:100%">
                     <thead>
                         <tr>
                             <th style="width:70px;">No.</th>
