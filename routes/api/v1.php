@@ -16,3 +16,18 @@ Route::prefix('auth')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
     });
 });
+
+Route::middleware([
+    'DecryptSanctumToken',
+    'auth:sanctum',
+    'SessionExpired',
+])->group(function () {
+
+    Route::prefix('client')->group(function () {
+        require __DIR__ . '/client.php';
+    });
+    
+    Route::prefix('admin')->group(function () {
+        require __DIR__ . '/admin.php';
+    });
+});
