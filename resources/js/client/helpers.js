@@ -40,7 +40,7 @@ export const ClientHelper = {
             danger: 'bg-danger'
         };
         return `<a href="${href}" class="badge f-14 ${bg[type] || bg.info}" title="Klik untuk lihat detail">
-                    ${status} <i class="ti ti-chevron-right"></i>
+                    ${status}
                 </a>`;
     },
 
@@ -138,5 +138,67 @@ export const ClientHelper = {
         const m = now.getMonth() - lahir.getMonth();
         if (m < 0 || (m === 0 && now.getDate() < lahir.getDate())) umur--;
         return umur;
+    },
+
+    /**
+     * Tabel DataTables server-side untuk GET /api/v1/client/declaration/list.
+     * Dipakai bersama oleh halaman "Dalam Proses" (type=1) dan "Terbit Polis" (type=2)
+     * karena keduanya memakai endpoint & kolom respons yang sama, hanya beda filter type.
+     */
+    renderDeclarationTable(tableSelector, type) {
+        return $(tableSelector).DataTable({
+            processing: true,
+            serverSide: true,
+            searching: true,
+            ordering: false,
+            pageLength: 25,
+            autoWidth: false,
+            language: this.dataTableLang,
+            ajax: (params, callback) => {
+                const query = new URLSearchParams({
+                    type: type,
+                    page: Math.floor(params.start / params.length) + 1,
+                    limit: params.length
+                });
+                if (params.search?.value) query.set('keyword', params.search.value);
+
+                this.apiFetch(`/api/v1/client/declaration/list?${query.toString()}`)
+                    .then(res => res.json().then(json => ({ ok: res.ok, json })))
+                    .then(({ ok, json }) => {
+                        if (!ok) {
+                            this.notify(json.message || 'Gagal memuat data.', 'warning');
+                            callback({ draw: params.draw, recordsTotal: 0, recordsFiltered: 0, data: [] });
+                            return;
+                        }
+                        callback({
+                            draw: params.draw,
+                            recordsTotal: json.pagination?.total || 0,
+                            recordsFiltered: json.pagination?.total || 0,
+                            data: json.data || []
+                        });
+                    })
+                    .catch(err => {
+                        console.error('Gagal memuat /declaration/list:', err);
+                        this.notify('Tidak dapat terhubung ke server.', 'danger');
+                        callback({ draw: params.draw, recordsTotal: 0, recordsFiltered: 0, data: [] });
+                    });
+            },
+            columns: [
+                { data: null, orderable: false, render: (d, t, row, meta) => meta.row + meta.settings._iDisplayStart + 1 },
+                { data: 'declaration_no', defaultContent: '-' },
+                { data: 'policy_no', defaultContent: '-' },
+                { data: 'insured_name', defaultContent: '-' },
+                { data: 'nik', defaultContent: '-' },
+                { data: 'gender_desc', defaultContent: '-' },
+                { data: 'birth_date', defaultContent: '-' },
+                { data: 'plafond', className: 'text-end fw-bold', defaultContent: '-' },
+                { data: 'created_at', defaultContent: '-' },
+                {
+                    data: 'status_name',
+                    orderable: false,
+                    render: (data, t, row) => this.statusLink(data || '-', 'info', `/client/penutupan/detail/${row.id}`)
+                }
+            ]
+        });
     }
 };
