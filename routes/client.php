@@ -19,12 +19,6 @@ use Illuminate\Support\Facades\Route;
 |
 | Route admin dibuat terpisah di routes/admin.php dengan pola yang sama.
 |
-| CATATAN: middleware CheckAccessToken (proteksi login) SEMENTARA
-| dilepas — endpoint login di sisi API sedang error (bug database,
-| bukan tanggung jawab kita). Pasang kembali begitu login sudah bisa
-| dipakai: tinggal tambahkan ->middleware(CheckAccessToken::class)
-| setelah ->name('client.') di bawah ini.
-|
 */
 
 Route::prefix('client')->name('client.')

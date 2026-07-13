@@ -5,53 +5,37 @@
 
 @section('content')
 
-{{-- ── Kartu ringkasan ── --}}
+{{-- ── Kartu ringkasan (pola social-widget-card, sama seperti dashboard admin) ── --}}
 <div class="row">
-    <div class="col-xl-3 col-md-6">
-        <div class="card stat-card">
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="card social-widget-card bg-primary">
             <div class="card-body">
-                <div>
-                    <div class="stat-label">Total Nilai Pertanggungan</div>
-                    <div class="stat-value" id="stat-pertanggungan">-</div>
-                    <div class="stat-sub">Seluruh polis aktif</div>
-                </div>
-                <div class="stat-icon bg-green-soft"><i class="ti ti-building-bank"></i></div>
+                <h3 class="text-white m-0" id="stat-pertanggungan">-</h3>
+                <span class="m-t-10">Total Nilai Pertanggungan</span>
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-md-6">
-        <div class="card stat-card">
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="card social-widget-card bg-success">
             <div class="card-body">
-                <div>
-                    <div class="stat-label">Total Premi</div>
-                    <div class="stat-value" id="stat-premi">-</div>
-                    <div class="stat-sub">Premi yang sudah dibayarkan</div>
-                </div>
-                <div class="stat-icon bg-blue-soft"><i class="ti ti-coin"></i></div>
+                <h3 class="text-white m-0" id="stat-premi">-</h3>
+                <span class="m-t-10">Total Premi</span>
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-md-6">
-        <div class="card stat-card">
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="card social-widget-card bg-secondary">
             <div class="card-body">
-                <div>
-                    <div class="stat-label">Total Debitur</div>
-                    <div class="stat-value" id="stat-debitur">-</div>
-                    <div class="stat-sub">Peserta asuransi terdaftar</div>
-                </div>
-                <div class="stat-icon bg-yellow-soft"><i class="ti ti-users"></i></div>
+                <h3 class="text-white m-0" id="stat-debitur">-</h3>
+                <span class="m-t-10">Total Debitur</span>
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-md-6">
-        <div class="card stat-card">
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="card social-widget-card bg-danger">
             <div class="card-body">
-                <div>
-                    <div class="stat-label">Total Klaim</div>
-                    <div class="stat-value" id="stat-klaim">-</div>
-                    <div class="stat-sub"><span id="stat-klaim-detail">-</span></div>
-                </div>
-                <div class="stat-icon bg-red-soft"><i class="ti ti-file-alert"></i></div>
+                <h3 class="text-white m-0" id="stat-klaim">-</h3>
+                <span class="m-t-10">Total Klaim</span>
             </div>
         </div>
     </div>

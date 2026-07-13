@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('pageTitle', 'Detail Penutupan')
-@section('pageIcon', 'ti ti-file-search')
 
 @section('content')
 
@@ -18,108 +17,108 @@
             <div class="row">
                 {{-- Kolom 1: data diri --}}
                 <div class="col-lg-4">
-                    <div class="detail-item">
-                        <div class="detail-label">Kategori Debitur</div>
-                        <div class="detail-value" id="d-kategori-debitur">-</div>
+                    <div class="mb-3">
+                        <small class="text-muted d-block">Kategori Debitur</small>
+                        <strong id="d-kategori-debitur">-</strong>
                     </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Debitur</div>
-                        <div class="detail-value big" id="d-debitur">-</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6 detail-item">
-                            <div class="detail-label">Tanggal Lahir</div>
-                            <div class="detail-value" id="d-tanggal-lahir">-</div>
-                        </div>
-                        <div class="col-6 detail-item">
-                            <div class="detail-label">Umur</div>
-                            <div class="detail-value" id="d-umur">-</div>
-                        </div>
+                    <div class="mb-3">
+                        <small class="text-muted d-block">Debitur</small>
+                        <strong class="fs-5" id="d-debitur">-</strong>
                     </div>
                     <div class="row">
-                        <div class="col-6 detail-item">
-                            <div class="detail-label">No. KTP</div>
-                            <div class="detail-value" id="d-no-ktp">-</div>
+                        <div class="col-6 mb-3">
+                            <small class="text-muted d-block">Tanggal Lahir</small>
+                            <strong id="d-tanggal-lahir">-</strong>
                         </div>
-                        <div class="col-6 detail-item">
-                            <div class="detail-label">Jenis Kelamin</div>
-                            <div class="detail-value" id="d-jenis-kelamin">-</div>
+                        <div class="col-6 mb-3">
+                            <small class="text-muted d-block">Umur</small>
+                            <strong id="d-umur">-</strong>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-6 detail-item">
-                            <div class="detail-label">No. HP</div>
-                            <div class="detail-value" id="d-no-hp">-</div>
+                        <div class="col-6 mb-3">
+                            <small class="text-muted d-block">No. KTP</small>
+                            <strong id="d-no-ktp">-</strong>
                         </div>
-                        <div class="col-6 detail-item">
-                            <div class="detail-label">Email</div>
-                            <div class="detail-value" id="d-email">-</div>
+                        <div class="col-6 mb-3">
+                            <small class="text-muted d-block">Jenis Kelamin</small>
+                            <strong id="d-jenis-kelamin">-</strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <small class="text-muted d-block">No. HP</small>
+                            <strong id="d-no-hp">-</strong>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <small class="text-muted d-block">Email</small>
+                            <strong id="d-email">-</strong>
                         </div>
                     </div>
                 </div>
 
                 {{-- Kolom 2: instansi & pinjaman --}}
                 <div class="col-lg-4">
-                    <div class="detail-item">
-                        <div class="detail-label">Nama Instansi/Perusahaan</div>
-                        <div class="detail-value" id="d-instansi">-</div>
+                    <div class="mb-3">
+                        <small class="text-muted d-block">Nama Instansi/Perusahaan</small>
+                        <strong id="d-instansi">-</strong>
                     </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Pangkat/Jabatan/Golongan</div>
-                        <div class="detail-value" id="d-pangkat">-</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6 detail-item">
-                            <div class="detail-label">No. Rek</div>
-                            <div class="detail-value" id="d-no-rek">-</div>
-                        </div>
-                        <div class="col-6 detail-item">
-                            <div class="detail-label">No. PK</div>
-                            <div class="detail-value" id="d-no-pk">-</div>
-                        </div>
+                    <div class="mb-3">
+                        <small class="text-muted d-block">Pangkat/Jabatan/Golongan</small>
+                        <strong id="d-pangkat">-</strong>
                     </div>
                     <div class="row">
-                        <div class="col-6 detail-item">
-                            <div class="detail-label">Tenor</div>
-                            <div class="detail-value" id="d-tenor">-</div>
+                        <div class="col-6 mb-3">
+                            <small class="text-muted d-block">No. Rek</small>
+                            <strong id="d-no-rek">-</strong>
                         </div>
-                        <div class="col-6 detail-item">
-                            <div class="detail-label">Input Date</div>
-                            <div class="detail-value" id="d-input-date">-</div>
+                        <div class="col-6 mb-3">
+                            <small class="text-muted d-block">No. PK</small>
+                            <strong id="d-no-pk">-</strong>
                         </div>
                     </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Periode</div>
-                        <div class="detail-value" id="d-periode">-</div>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <small class="text-muted d-block">Tenor</small>
+                            <strong id="d-tenor">-</strong>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <small class="text-muted d-block">Input Date</small>
+                            <strong id="d-input-date">-</strong>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted d-block">Periode</small>
+                        <strong id="d-periode">-</strong>
                     </div>
                 </div>
 
                 {{-- Kolom 3: nilai, alamat & dokumen --}}
                 <div class="col-lg-4">
                     <div class="row">
-                        <div class="col-6 detail-item">
-                            <div class="detail-label">Plafond Kredit</div>
-                            <div class="detail-value big" id="d-plafond">-</div>
+                        <div class="col-6 mb-3">
+                            <small class="text-muted d-block">Plafond Kredit</small>
+                            <strong class="fs-5" id="d-plafond">-</strong>
                         </div>
-                        <div class="col-6 detail-item">
-                            <div class="detail-label">Rate Premi</div>
-                            <div class="detail-value" id="d-rate">-</div>
+                        <div class="col-6 mb-3">
+                            <small class="text-muted d-block">Rate Premi</small>
+                            <strong id="d-rate">-</strong>
                         </div>
                     </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Nilai Premi</div>
-                        <div class="detail-value big" id="d-premi">-</div>
+                    <div class="mb-3">
+                        <small class="text-muted d-block">Nilai Premi</small>
+                        <strong class="fs-5" id="d-premi">-</strong>
                     </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Alamat (Sesuai KTP)</div>
-                        <div class="detail-value" id="d-alamat-ktp">-</div>
+                    <div class="mb-3">
+                        <small class="text-muted d-block">Alamat (Sesuai KTP)</small>
+                        <strong id="d-alamat-ktp">-</strong>
                     </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Alamat Tempat Tinggal</div>
-                        <div class="detail-value" id="d-alamat-domisili">-</div>
+                    <div class="mb-3">
+                        <small class="text-muted d-block">Alamat Tempat Tinggal</small>
+                        <strong id="d-alamat-domisili">-</strong>
                     </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Dokumen Terunggah</div>
+                    <div class="mb-3">
+                        <small class="text-muted d-block">Dokumen Terunggah</small>
                         <ul class="list-unstyled mt-2 mb-0" id="d-files"></ul>
                     </div>
                 </div>
@@ -164,7 +163,7 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-striped log-table" style="width:100%">
+                <table class="table table-striped" style="width:100%">
                     <thead>
                         <tr>
                             <th style="width:70px;">No.</th>

@@ -17,16 +17,15 @@ export const ClientHelper = {
         return 'IDR ' + this.formatNumber(value);
     },
 
-    /** Badge status berwarna. type: success | warning | info | danger */
+    /** Badge status berwarna. type: success | warning | info | danger — sama seperti pola badge admin (badge f-14 bg-*) */
     statusBadge(status, type) {
-        const icons = {
-            success: 'ti ti-circle-check',
-            warning: 'ti ti-alert-triangle',
-            info: 'ti ti-loader',
-            danger: 'ti ti-circle-x'
+        const bg = {
+            success: 'bg-success',
+            warning: 'bg-warning',
+            info: 'bg-info',
+            danger: 'bg-danger'
         };
-        const icon = icons[type] || icons.info;
-        return `<span class="badge-status st-${type || 'info'}"><i class="${icon}"></i>${status}</span>`;
+        return `<span class="badge f-14 ${bg[type] || bg.info}">${status}</span>`;
     },
 
     /**
@@ -34,15 +33,14 @@ export const ClientHelper = {
      * Dipakai di kolom status tabel agar tidak perlu kolom aksi terpisah.
      */
     statusLink(status, type, href) {
-        const icons = {
-            success: 'ti ti-circle-check',
-            warning: 'ti ti-alert-triangle',
-            info: 'ti ti-loader',
-            danger: 'ti ti-circle-x'
+        const bg = {
+            success: 'bg-success',
+            warning: 'bg-warning',
+            info: 'bg-info',
+            danger: 'bg-danger'
         };
-        const icon = icons[type] || icons.info;
-        return `<a href="${href}" class="badge-status st-${type || 'info'}" title="Klik untuk lihat detail">
-                    <i class="${icon}"></i>${status}<i class="ti ti-chevron-right ms-1"></i>
+        return `<a href="${href}" class="badge f-14 ${bg[type] || bg.info}" title="Klik untuk lihat detail">
+                    ${status} <i class="ti ti-chevron-right"></i>
                 </a>`;
     },
 
@@ -68,16 +66,28 @@ export const ClientHelper = {
         return new URLSearchParams(window.location.search).get(name);
     },
 
-    /** Notifikasi sukses/gagal (plugin notifier bawaan template) */
+    /** Notifikasi sukses/gagal — modal SweetAlert2 biasa (bukan toast) */
     notify(message, type = 'success') {
-        if (typeof notifier !== 'undefined') {
-            notifier.show(
-                type === 'success' ? 'Berhasil!' : 'Perhatian!',
-                message,
-                type,
-                '',
-                4000
-            );
+        const icons = {
+            success: 'success',
+            warning: 'warning',
+            danger: 'error',
+            info: 'info'
+        };
+        const titles = {
+            success: 'Berhasil!',
+            warning: 'Perhatian!',
+            danger: 'Gagal!',
+            info: 'Informasi'
+        };
+
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                icon: icons[type] || 'info',
+                title: titles[type] || 'Informasi',
+                text: message,
+                confirmButtonColor: '#00a651'
+            });
         } else {
             alert(message);
         }
