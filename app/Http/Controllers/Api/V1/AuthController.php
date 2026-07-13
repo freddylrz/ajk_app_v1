@@ -97,7 +97,7 @@ class AuthController extends Controller
                     CryptManual::encryption($accessTokenRes),
                     1440,
                     '/',                     // path
-                    '/',  // domain
+                    null,  // domain
                     true,                    // Secure
                     false,                   // HttpOnly
                     false,
@@ -107,7 +107,7 @@ class AuthController extends Controller
                     CryptManual::encryption($refreshTokenRes),
                     43200,
                     '/',
-                    '/',
+                    null,  // domain
                     false,
                     false,
                     false,
@@ -227,7 +227,7 @@ class AuthController extends Controller
                     CryptManual::encryption($accessTokenRes),
                     1440,
                     '/',
-                    '/',
+                    null,
                     true,
                     false,
                     false,
@@ -237,7 +237,7 @@ class AuthController extends Controller
                     CryptManual::encryption($refreshTokenRes),
                     43200,
                     '/',
-                    '/',
+                    null,
                     true,
                     false,
                     false,
