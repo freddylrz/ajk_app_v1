@@ -38,18 +38,34 @@ $(function () {
         $('#umur').val(umur ? umur + ' Tahun' : '');
     });
 
-    /* ── Checkbox No. Rek & No. PK: centang = belum ada (isi 0) ── */
+    /* ── Checkbox No. Rek & No. PK: dicentang = sudah punya nomor (bisa diisi) ── */
     function toggleCheckField(checkbox, input) {
         $(checkbox).on('change', function () {
             if (this.checked) {
-                $(input).val('0').prop('readonly', true);
-            } else {
                 $(input).val('').prop('readonly', false).trigger('focus');
+            } else {
+                $(input).val('0').prop('readonly', true);
             }
         });
     }
     toggleCheckField('#cek_no_rek', '#no_rek');
     toggleCheckField('#cek_no_pk', '#no_pk');
+
+    /* ── Tampilkan daftar nama file yang dipilih di bawah input upload ── */
+    function previewFileList(inputSelector, listSelector) {
+        $(inputSelector).on('change', function () {
+            const list = $(listSelector);
+            if (!this.files || this.files.length === 0) {
+                list.html('<li class="text-muted fst-italic">Belum ada file dipilih</li>');
+                return;
+            }
+            list.html(Array.from(this.files).map(f => `
+                <li><i class="ti ti-paperclip"></i> ${f.name}</li>
+            `).join(''));
+        });
+    }
+    previewFileList('#file_ktp', '#preview_file_ktp');
+    previewFileList('#file_pk', '#preview_file_pk');
 
     /* ── Format ribuan saat mengetik plafond ── */
     $('#plafond_kredit').on('input', function () {

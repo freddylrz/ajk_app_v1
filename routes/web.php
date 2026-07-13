@@ -14,16 +14,6 @@ Route::get('/login', function () {
     return view('auth.login');
 })->middleware(RedirectIfAccessTokenExist::class)->name('login');
 
-/*
-|--------------------------------------------------------------------------
-| Route per role
-|--------------------------------------------------------------------------
-| Setiap role punya file route sendiri agar rapi dan tidak saling tabrak.
-| - routes/client.php → halaman user client  (prefix /client, name client.*)
-| - routes/admin.php  → halaman user admin   (prefix /admin,  name admin.*)
-*/
-
-
 Route::middleware([RedirectIfAccessTokenExist::class])->group(function () {
     Route::get('/', function () {
         return view('auth.login');
@@ -33,10 +23,7 @@ Route::middleware([RedirectIfAccessTokenExist::class])->group(function () {
     })->name('login');
 });
 
-// Route client SEMENTARA tidak dibungkus CheckAccessToken (login API
-// sedang error di sisi DB, lihat catatan di routes/client.php).
 require __DIR__ . '/client.php';
-
 Route::middleware([CheckAccessToken::class])->group(function () {
     require __DIR__ . '/tib.php';
 });

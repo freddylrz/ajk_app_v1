@@ -22,8 +22,8 @@ export const ClientData = {
 
     /* ── Ringkasan dashboard ─────────────────────────────── */
     "dashboard": {
-        "totalPertanggungan": 10000000000,
-        "totalPremi": 100000000,
+        "totalPertanggungan": 100000000,
+        "totalPremi": 1000000,
         "totalDebitur": 500,
         "totalKlaim": 7,
         "klaimDiproses": 3,

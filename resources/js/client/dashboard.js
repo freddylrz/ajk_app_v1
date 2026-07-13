@@ -16,7 +16,6 @@ $(function () {
     $('#stat-premi').text(ClientHelper.formatIDR(dash.totalPremi));
     $('#stat-debitur').text(ClientHelper.formatNumber(dash.totalDebitur));
     $('#stat-klaim').text(ClientHelper.formatNumber(dash.totalKlaim));
-    $('#stat-klaim-detail').text(dash.klaimDiproses + ' diproses, ' + dash.klaimSelesai + ' selesai');
 
     /* ── Grafik penutupan per bulan ── */
     const chart = new ApexCharts(document.querySelector('#chart-penutupan'), {

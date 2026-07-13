@@ -46,18 +46,18 @@
                 <div class="modal-body">
                     <div class="mb-4">
                         <label>Klaim ID</label>
-                        <div class="detail-value big" id="modal-klaim-id">-</div>
-                        <div class="detail-value" id="modal-debitur" style="font-size:15px;">-</div>
+                        <div><strong class="fs-5" id="modal-klaim-id">-</strong></div>
+                        <div id="modal-debitur">-</div>
                     </div>
-                    <div class="upload-item">
-                        <div class="upload-title"><i class="ti ti-file-text"></i> 1. Formulir Klaim (PDF) <span class="required-star">*</span></div>
+                    <div class="mb-3">
+                        <label>1. Formulir Klaim (PDF) <span class="text-danger">*</span></label>
                         <input type="file" class="form-control" name="file_formulir" accept="application/pdf" required>
-                        <a href="#!" class="fw-bold d-inline-block mt-2" style="font-size:15px;">
+                        <a href="#!" class="fw-bold d-inline-block mt-2">
                             <i class="ti ti-download"></i> Unduh Template Formulir Klaim
                         </a>
                     </div>
-                    <div class="upload-item">
-                        <div class="upload-title"><i class="ti ti-files"></i> 2. Dokumen Pendukung <small>(Surat keterangan kematian, dll)</small></div>
+                    <div class="mb-3">
+                        <label>2. Dokumen Pendukung <small class="text-muted">(Surat keterangan kematian, dll)</small></label>
                         <input type="file" class="form-control" name="file_pendukung" accept="application/pdf" multiple>
                     </div>
                 </div>

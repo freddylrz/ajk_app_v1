@@ -1,9 +1,3 @@
-{{-- ============================================================
-     LAYOUT TUNGGAL — dipakai area ADMIN & CLIENT
-     Kondisi area ditentukan dari prefix URL:
-       /client/* → tampilan client (menu client, tema hijau .client-area)
-       selainnya → tampilan admin (tema default)
-     ============================================================ --}}
 @php
     $isClient = Request::is('client*');
     $isTib = Request::is('tib*');
@@ -37,9 +31,6 @@
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/select.bootstrap5.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/select2-bootstrap-5-theme.min.css') }}">
 
-    {{-- Satu file CSS custom untuk semua area (client di-scope .client-area) --}}
-    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}"/>
-
     @stack('levelPluginsJsHeader')
     @stack('pageStyles')
 </head>
@@ -71,71 +62,18 @@
                         <img src="{{ asset('assets/images/user/avatar-1.jpg') }}" alt="avatar"
                              class="user-avtar rounded-circle" style="width:38px;height:38px;object-fit:cover;flex-shrink:0;"/>
                         <div style="min-width:0">
-                            <h4 class="mb-0 text-truncate" id="display_user" style="font-weight:800;">
-                                {{ $isClient ? 'OPR' : 'Administrator' }}
-                            </h4>
-                            @if($isClient)
-                                <small class="text-success fw-bold"><i class="ti ti-circle-filled" style="font-size:9px;"></i> Online</small>
-                            @endif
+                            <h4 class="mb-0 text-truncate" id="display_user">Administrator</h4>
                         </div>
                     </div>
                     <div class="pt-2">
                         <button class="btn btn-danger w-100 btn-sm" id="logout">
-                            <i class="ti ti-logout me-1"></i>{{ $isClient ? 'Keluar' : 'Log Out' }}
+                            <i class="ti ti-logout me-1"></i>Log Out
                         </button>
                     </div>
                 </div>
             </div>
 
             <ul class="pc-navbar">
-                @if($isClient)
-                    {{-- ══════════ MENU CLIENT ══════════ --}}
-                    <li class="pc-item pc-caption">
-                        <label>Menu Utama</label>
-                    </li>
-
-                    <li class="pc-item {{ Request::routeIs('client.dashboard') ? 'active' : '' }}">
-                        <a href="{{ route('client.dashboard') }}" class="pc-link">
-                            <i class="ti ti-home"></i>
-                            <span class="pc-mtext">Beranda</span>
-                        </a>
-                    </li>
-
-                    <li class="pc-item pc-hasmenu {{ Request::routeIs('client.penutupan.*') ? 'pc-trigger active' : '' }}">
-                        <a href="#!" class="pc-link">
-                            <i class="ti ti-file-certificate"></i>
-                            <span class="pc-mtext">Penutupan</span>
-                            <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
-                        </a>
-                        <ul class="pc-submenu">
-                            <li class="pc-item {{ Request::routeIs('client.penutupan.input') ? 'active' : '' }}">
-                                <a class="pc-link" href="{{ route('client.penutupan.input') }}">Input Data</a>
-                            </li>
-                            <li class="pc-item {{ Request::routeIs('client.penutupan.list', 'client.penutupan.detail') ? 'active' : '' }}">
-                                <a class="pc-link" href="{{ route('client.penutupan.list') }}">List Data</a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="pc-item pc-hasmenu {{ Request::routeIs('client.klaim.*') ? 'pc-trigger active' : '' }}">
-                        <a href="#!" class="pc-link">
-                            <i class="ti ti-file-alert"></i>
-                            <span class="pc-mtext">Klaim</span>
-                            <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
-                        </a>
-                        <ul class="pc-submenu">
-                            <li class="pc-item {{ Request::routeIs('client.klaim.laporan-awal') ? 'active' : '' }}">
-                                <a class="pc-link" href="{{ route('client.klaim.laporan-awal') }}">Laporan Awal Klaim</a>
-                            </li>
-                            <li class="pc-item {{ Request::routeIs('client.klaim.formulir') ? 'active' : '' }}">
-                                <a class="pc-link" href="{{ route('client.klaim.formulir') }}">Formulir Klaim</a>
-                            </li>
-                            <li class="pc-item {{ Request::routeIs('client.klaim.data', 'client.klaim.detail') ? 'active' : '' }}">
-                                <a class="pc-link" href="{{ route('client.klaim.data') }}">Data Klaim</a>
-                            </li>
-                        </ul>
-                    </li>
-                @elseif($isTib)
                     {{-- ══════════ MENU TIB ══════════ --}}
                     <li class="pc-item {{ Request::is('tib/dashboard') ? 'active' : '' }}">
                         <a href="/tib/dashboard" class="pc-link">
@@ -150,6 +88,11 @@
                             <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
                         </a>
                         <ul class="pc-submenu">
+                            @if($isClient)
+                            <li class="pc-item {{ Request::routeIs('client.penutupan.input') ? 'active' : '' }}">
+                                <a class="pc-link" href="{{ route('client.penutupan.input') }}">Input Data Peserta</a>
+                            </li>
+                            @endif
                             <li class="pc-item {{ Request::is('tib/penutupan/list-data') ? 'active' : '' }}">
                                 <a class="pc-link" href="/tib/penutupan/list-data">Dalam Proses</a>
                             </li>
@@ -192,7 +135,6 @@
                             </li>
                         </ul>
                     </li>
-                @endif
             </ul>
         </div>
     </div>
@@ -214,27 +156,19 @@
                         <i class="ti ti-menu-2"></i>
                     </a>
                 </li>
-                @if($isClient)
-                    <li class="pc-h-item d-none d-md-flex align-items-center ms-2" style="gap:8px;">
-                        <span style="font-size:15px;font-weight:800;color:#008743;">
-                            <i class="ti ti-building-bank"></i> BNI Cabang KC KUNINGAN
-                        </span>
+                @hasSection('pageTitle')
+                    <li class="pc-h-item d-none d-md-flex align-items-center ms-2" style="gap:6px;">
+                        <span style="color:#bbb;font-size:16px;">›</span>
+                        <span style="font-size:13.5px;font-weight:600;color:#333;">@yield('pageTitle')</span>
                     </li>
-                @else
-                    @hasSection('pageTitle')
-                        <li class="pc-h-item d-none d-md-flex align-items-center ms-2" style="gap:6px;">
-                            <span style="color:#bbb;font-size:16px;">›</span>
-                            <span style="font-size:13.5px;font-weight:600;color:#333;">@yield('pageTitle')</span>
-                        </li>
-                    @endif
                 @endif
             </ul>
         </div>
         <div class="ms-auto d-flex align-items-center gap-2">
             <div class="d-none d-sm-flex align-items-center gap-2"
-                 style="font-size:{{ $isClient ? '15px' : '13px' }};font-weight:{{ $isClient ? '700' : '400' }};color:#333;border-left:1px solid #eee;padding-left:14px;">
-                <i class="ti ti-user-circle" style="font-size:{{ $isClient ? '22px' : '18px' }};{{ $isClient ? 'color:#00a651;' : '' }}"></i>
-                <span id="header_user">{{ $isClient ? 'OPR' : 'Administrator' }}</span>
+                 style="font-size:13px;font-weight:400;color:#333;border-left:1px solid #eee;padding-left:14px;">
+                <i class="ti ti-user-circle" style="font-size:18px;"></i>
+                <span id="header_user">Administrator</span>
             </div>
         </div>
     </div>
@@ -244,17 +178,6 @@
 <!-- [ Content ] -->
 <div class="pc-container">
     <div class="pc-content">
-        @if($isClient)
-            @hasSection('pageTitle')
-                <div class="page-title-box">
-                    <h2><i class="@yield('pageIcon', 'ti ti-file')"></i>@yield('pageTitle')</h2>
-                    <div class="breadcrumb-note">
-                        <i class="ti ti-home"></i> Beranda &rsaquo; @yield('pageTitle')
-                    </div>
-                </div>
-            @endif
-        @endif
-
         @yield('content')
     </div>
 </div>
@@ -294,13 +217,6 @@
     window.__cookieDomain = @json(config('setup.domain') ?: null);
     const base_url = '{{ config('setup.base_url') }}';
 </script>
-
-@if($isClient)
-    {{-- Sesi: info user, refresh token, logout (API /api/v1/auth). Data
-         dummy & helper diimpor lewat ES module oleh masing-masing skrip
-         halaman (lihat @push('pageScripts') di tiap view client). --}}
-    @vite(['resources/js/client/auth.js'])
-@endif
 
 @stack('levelPluginsJs')
 @stack('pageScripts')
