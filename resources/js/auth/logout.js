@@ -174,7 +174,7 @@ async function getUserInfo() {
         roles = responses.data.user_info.roles || [];
         const path = window.location.pathname;
 
-        $('.displayName').text(responses.data.user_info.display_name || 'User');
+        $('.display_user').text(responses.data.user_info.display_name || 'User');
         function isActive(urls) {
             return urls.some(url => path.startsWith(url)) ? 'active' : '';
         }
@@ -202,7 +202,7 @@ async function getUserInfo() {
 $(document).ready(async function () {
     await getUserInfo()
 
-    $('#logout-button').click(function () {
+    $('#logout').click(function () {
         // Show loading alert
         Swal.fire({
             title: 'Sedang proses keluar...',
@@ -225,7 +225,7 @@ $(document).ready(async function () {
         // Simulate an async operation (clearing cookies)
         setTimeout(function () {
             // Clear cookies
-            clearCookies();
+            clearCookie('__ajk-tib-rt');
 
             // Close loading alert
             Swal.close();
@@ -248,14 +248,30 @@ $(document).ready(async function () {
 });
 
 // Function to clear the 'access_token' cookie for the specified domain and subdomains
-function clearCookies() {
-    const domain = import.meta.env.VITE_DOMAIN
-    const cookieName = "__tib-rt";
+function clearCookie(name) {
+    const hostname = window.location.hostname;
 
-    // Clear the cookie for the specified domain
-    document.cookie = `${cookieName}=;expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=${domain}; path=/;`;
+    // Semua kemungkinan domain
+    const domains = new Set([
+        "",
+        hostname,
+        "." + hostname,
+    ]);
 
-    // Clear the cookie for the current subdomain (if needed)
-    const currentDomain = window.location.hostname;
-    document.cookie = `${cookieName}=;expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    // Tambahkan parent domain
+    const parts = hostname.split(".");
+    for (let i = 0; i < parts.length - 1; i++) {
+        const domain = parts.slice(i).join(".");
+        domains.add(domain);
+        domains.add("." + domain);
+    }
+
+    // Hapus cookie di semua kombinasi domain
+    domains.forEach(domain => {
+        const domainPart = domain ? `; domain=${domain}` : "";
+
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/${domainPart}`;
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax${domainPart}`;
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=None; Secure${domainPart}`;
+    });
 }

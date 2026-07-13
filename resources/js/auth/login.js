@@ -1,4 +1,8 @@
+import {
+    getAccessTokenFromCookies
+} from '/resources/js/helper_cookie.js';
 let searchParams = new URLSearchParams(window.location.search);
+
 const redirectUrl = searchParams.get('redirect_url');
 
 $(document).ready(() => {
@@ -37,7 +41,7 @@ async function handleLogin(event) {
         // const encryptedLogin = await encryptData(dataLogin, 1);
 
         const response = await $.ajax({
-            url: `${authBackendUrl }/api/v1/auth/login`,
+            url: `${authBackendUrl}/api/v1/auth/login`,
             method: 'POST',
             headers: {
                 "X-Timestamp": Math.floor(Date.now() / 1000),
@@ -49,17 +53,40 @@ async function handleLogin(event) {
         setLoading(loginButton, false);
 
         if (response.data) {
+            
+            setTimeout(async () => {
+                const newToken = await getAccessTokenFromCookies();
+                $.ajax({
+                    url: `${authBackendUrl}/api/v1/auth/user-info`,
+                    method: "GET",
+                    timeout: 0,
+                    headers: {
+                        "X-Timestamp": Math.floor(Date.now() / 1000),
+                        'Authorization': 'Bearer ' + newToken,
+                    },
+                }).done(async function (responses) {
+                    const roles = responses.data.user_info.roles || [];
 
-            Swal.fire({
-                icon: 'success',
-                title: "Berhasil Masuk",
-                showConfirmButton: false,
-                allowOutsideClick: false,
-                timer: 1000,
-            })
-            setTimeout(function () {
-                window.location.href = redirectUrl || '/dashboard';
+                    Swal.fire({
+                        icon: 'success',
+                        title: "Berhasil Masuk",
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        timer: 1000,
+                    })
+
+                    if (roles.includes('OPR') || roles.includes('SPV')) {
+                        setTimeout(() => {
+                            window.location.href = redirectUrl || '/client/dashboard';
+                        }, 1000);
+                    } else {
+                        setTimeout(() => {
+                            window.location.href = redirectUrl || '/tib/dashboard';
+                        }, 1000);
+                    }
+                });
             }, 1000);
+
         } else {
             showAlert('warning', response.message);
         }
