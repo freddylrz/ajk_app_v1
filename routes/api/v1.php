@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\DashboardController;
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -22,6 +23,8 @@ Route::middleware([
     'auth:sanctum',
     'SessionExpired',
 ])->group(function () {
+
+    Route::get('/dashboard', [DashboardController::class, 'dashboard']);
 
     Route::prefix('client')->group(function () {
         require __DIR__ . '/client.php';

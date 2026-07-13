@@ -321,12 +321,6 @@ class DeclarationController extends Controller
                 DB::table('operational.tb_upload')->insert($uploads);
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | Upload Debitur
-            |--------------------------------------------------------------------------
-            */
-
             if (!empty($input['debtor_file'])) {
 
                 foreach ($input['debtor_file'] as $file) {
@@ -354,12 +348,6 @@ class DeclarationController extends Controller
                 }
 
             }
-
-            /*
-            |--------------------------------------------------------------------------
-            | Declaration Log
-            |--------------------------------------------------------------------------
-            */
 
             $logId = Init::createId();
 
@@ -549,12 +537,6 @@ class DeclarationController extends Controller
                 return $fileName;
             };
 
-            /*
-            |--------------------------------------------------------------------------
-            | Update Upload KTP
-            |--------------------------------------------------------------------------
-            */
-
             if (!empty($input['ktp_file'])) {
 
                 DB::table('operational.tb_upload')
@@ -588,12 +570,6 @@ class DeclarationController extends Controller
                 }
 
             }
-
-            /*
-            |--------------------------------------------------------------------------
-            | Update Upload Debitur
-            |--------------------------------------------------------------------------
-            */
 
             if (!empty($input['debtor_file'])) {
 
@@ -634,12 +610,6 @@ class DeclarationController extends Controller
                 }
 
             }
-
-            /*
-            |--------------------------------------------------------------------------
-            | Update Status
-            |--------------------------------------------------------------------------
-            */
 
             if (
                 !DB::table('operational.tb_declaration_status')
