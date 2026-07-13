@@ -1,56 +1,31 @@
 /**
  * ============================================================
  * PAGE: Penutupan — List Data
- * Sumber data : ClientData.penutupan
- *
- * Catatan: data di-supply langsung ke DataTables lewat opsi
- * `data` + `columns` (bukan injeksi HTML manual) supaya jumlah
- * kolom selalu cocok dan tidak memicu error DataTables.
+ * API  : GET /api/v1/client/declaration/list — belum diimplementasikan
+ *        di sisi server, jadi tabel dibiarkan kosong sampai endpoint
+ *        tersedia (tidak diisi data bikinan).
  * ============================================================
  */
 
-import { ClientData } from './data/dummy-data.js';
 import { ClientHelper } from './helpers.js';
 
 $(function () {
-    const data = ClientData.penutupan;
-
+    // TODO: sambungkan ke GET /api/v1/client/declaration/list begitu tersedia.
     $('#table-penutupan').DataTable({
-        data: data,
+        data: [],
         columns: [
-            {
-                data: null,
-                render: (d, type, row, meta) => meta.row + 1
-            },
+            { data: null, render: (d, type, row, meta) => meta.row + 1 },
             { data: 'kategoriDebitur' },
-            {
-                data: 'debitur',
-                render: d => `<span class="fw-bold">${d}</span>`
-            },
+            { data: 'debitur' },
             { data: 'tanggalLahir' },
             { data: 'namaInstansi' },
             { data: 'noPk' },
             { data: 'tenor', className: 'text-center' },
             { data: 'periode' },
-            {
-                data: 'plafondKredit',
-                className: 'text-end fw-bold',
-                render: d => ClientHelper.formatNumber(d)
-            },
-            {
-                data: 'ratePremi',
-                className: 'text-center',
-                render: d => d.toFixed(5) + ' %'
-            },
-            {
-                data: 'nilaiPremi',
-                className: 'text-end fw-bold',
-                render: d => ClientHelper.formatNumber(d)
-            },
-            {
-                data: null,
-                render: p => ClientHelper.statusLink(p.status, p.statusType, '/client/penutupan/detail/' + p.id)
-            }
+            { data: 'plafondKredit', className: 'text-end fw-bold' },
+            { data: 'ratePremi', className: 'text-center' },
+            { data: 'nilaiPremi', className: 'text-end fw-bold' },
+            { data: null }
         ],
         language: ClientHelper.dataTableLang,
         pageLength: 25,
@@ -58,9 +33,6 @@ $(function () {
         autoWidth: false
     });
 
-    /* ── Total footer ── */
-    const totalPlafond = data.reduce((sum, p) => sum + p.plafondKredit, 0);
-    const totalPremi = data.reduce((sum, p) => sum + p.nilaiPremi, 0);
-    $('#total-plafond').text(ClientHelper.formatNumber(totalPlafond));
-    $('#total-premi').text(ClientHelper.formatNumber(totalPremi));
+    $('#total-plafond').text('-');
+    $('#total-premi').text('-');
 });

@@ -4,13 +4,14 @@
 
 @section('content')
 
+<div class="pct-body">
 {{-- id dikirim dari controller, dibaca oleh penutupan-detail.js --}}
 <div id="detail-container" data-id="{{ $id }}">
 
     <div class="card">
         <div class="card-header">
             <i class="ti ti-file-certificate"></i>
-            <h5>No. Polis : <span id="head-no-polis">-</span></h5>
+            <h3>No. Polis : <span id="head-no-polis">-</span></h3>
             <span class="ms-auto" id="head-status"></span>
         </div>
         <div class="card-body">
@@ -136,11 +137,11 @@
     <div class="card">
         <div class="card-header">
             <i class="ti ti-heart-rate-monitor"></i>
-            <h5>Keterangan Kesehatan</h5>
+            <h3>Keterangan Kesehatan</h3>
         </div>
         <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped" style="width:100%">
+            <div class="table-responsive dt-responsive">
+                <table class="table table-striped table-bordered nowrap" style="width:100%">
                     <thead>
                         <tr>
                             <th style="width:60px;">No.</th>
@@ -159,11 +160,11 @@
     <div class="card">
         <div class="card-header">
             <i class="ti ti-timeline-event"></i>
-            <h5>Log Status</h5>
+            <h3>Log Status</h3>
         </div>
         <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped" style="width:100%">
+            <div class="table-responsive dt-responsive">
+                <table class="table table-striped table-bordered nowrap" style="width:100%">
                     <thead>
                         <tr>
                             <th style="width:70px;">No.</th>
@@ -179,9 +180,10 @@
     </div>
 
 </div>
+</div>
 
 @endsection
 
-@push('pageScripts')
+@push('levelPluginsJs')
     @vite(['resources/js/client/penutupan-detail.js'])
 @endpush

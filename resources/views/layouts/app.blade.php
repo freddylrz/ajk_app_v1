@@ -242,7 +242,6 @@
     </script>
 
     @stack('levelPluginsJs')
-    @stack('pageScripts')
 </body>
 
 </html>
