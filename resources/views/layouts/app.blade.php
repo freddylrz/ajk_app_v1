@@ -143,7 +143,6 @@
                             <span class="pc-mtext">Beranda</span>
                         </a>
                     </li>
-
                     <li class="pc-item pc-hasmenu {{ Request::is('tib/penutupan/*') ? 'active' : '' }}">
                         <a href="#!" class="pc-link">
                             <i class="ti ti-file-certificate"></i>
@@ -175,6 +174,21 @@
                             </li>
                             <li class="pc-item {{ Request::is('tib/klaim/rekap') ? 'active' : '' }}">
                                 <a class="pc-link" href="/tib/klaim/rekap">Rekap</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="pc-item pc-hasmenu {{ Request::is('tib/utilities/*') ? 'active' : '' }}">
+                        <a href="#!" class="pc-link">
+                            <i class="ti ti-settings"></i>
+                            <span class="pc-mtext">Pengaturan</span>
+                            <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
+                        </a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item {{ Request::is('tib/utilities/list-user') ? 'active' : '' }}">
+                                <a class="pc-link" href="/tib/utilities/list-user">User</a>
+                            </li>
+                            <li class="pc-item {{ Request::is('tib/utilities/list-branch') ? 'active' : '' }}">
+                                <a class="pc-link" href="/tib/utilities/list-branch">Cabang</a>
                             </li>
                         </ul>
                     </li>
