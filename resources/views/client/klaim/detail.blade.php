@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
 @section('pageTitle', 'Detail Klaim')
-@section('pageIcon', 'ti ti-file-search')
 
 @section('content')
 
+<div class="pct-body">
 {{-- id dikirim dari controller, dibaca oleh klaim-detail.js --}}
 <div id="detail-container" data-id="{{ $id }}">
 
     <div class="card">
         <div class="card-header">
             <i class="ti ti-file-alert"></i>
-            <h5>Klaim ID : <span id="head-klaim-id">-</span></h5>
+            <h3>Klaim ID : <span id="head-klaim-id">-</span></h3>
             <span class="ms-auto" id="head-status"></span>
         </div>
         <div class="card-body">
@@ -68,11 +68,11 @@
     <div class="card">
         <div class="card-header">
             <i class="ti ti-timeline-event"></i>
-            <h5>Log Status</h5>
+            <h3>Log Status</h3>
         </div>
         <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped" style="width:100%">
+            <div class="table-responsive dt-responsive">
+                <table class="table table-striped table-bordered nowrap" style="width:100%">
                     <thead>
                         <tr>
                             <th style="width:70px;">No.</th>
@@ -88,9 +88,10 @@
     </div>
 
 </div>
+</div>
 
 @endsection
 
-@push('pageScripts')
+@push('levelPluginsJs')
     @vite(['resources/js/client/klaim-detail.js'])
 @endpush

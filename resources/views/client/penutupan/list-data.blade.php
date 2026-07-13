@@ -1,21 +1,21 @@
 @extends('layouts.app')
 
 @section('pageTitle', 'List Data Penutupan')
-@section('pageIcon', 'ti ti-list-details')
 
 @section('content')
 
+<div class="pct-body">
 <div class="card">
     <div class="card-header">
         <i class="ti ti-table"></i>
-        <h5>Data Penutupan</h5>
-        <a href="{{ route('client.penutupan.input') }}" class="btn btn-warning btn-sm ms-auto">
-            <i class="ti ti-plus"></i> Input Data Baru
-        </a>
+        <h3>Data Penutupan</h3>
     </div>
     <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-striped" id="table-penutupan" style="width:100%">
+        <a href="{{ route('client.penutupan.input') }}" class="btn btn-primary btn-sm mb-3 float-end">
+            <i class="ti ti-plus"></i> Input Data Baru
+        </a>
+        <div class="table-responsive dt-responsive">
+            <table class="table table-striped table-bordered nowrap" id="table-penutupan" style="width:100%">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -46,9 +46,10 @@
         </div>
     </div>
 </div>
+</div>
 
 @endsection
 
-@push('pageScripts')
+@push('levelPluginsJs')
     @vite(['resources/js/client/penutupan-list.js'])
 @endpush
