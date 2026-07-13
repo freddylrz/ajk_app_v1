@@ -5,6 +5,9 @@
  * ============================================================
  */
 
+import { ClientData } from './data/dummy-data.js';
+import { ClientHelper } from './helpers.js';
+
 $(function () {
     const dash = ClientData.dashboard;
 

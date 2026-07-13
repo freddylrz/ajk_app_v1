@@ -10,8 +10,15 @@
  *   __ajk-tib-rt = refresh token (30 hari)
  * Token dikirim apa adanya sebagai Bearer — dekripsi dilakukan
  * middleware DecryptSanctumToken di sisi server.
+ *
+ * LOGIN_ENFORCED = false: login API sedang tidak bisa dipakai (bug
+ * database di sisi tim API — lihat laporan sebelumnya), jadi redirect
+ * paksa ke /login dimatikan sementara supaya halaman client tetap
+ * bisa ditest. Set kembali ke true begitu login sudah bisa dipakai.
  * ============================================================
  */
+
+const LOGIN_ENFORCED = false;
 
 const ClientAuth = {
 
@@ -77,7 +84,7 @@ const ClientAuth = {
                 if (!sudahRefresh && await this.refreshSession()) {
                     return this.loadUserInfo(true);
                 }
-                this.goToLogin();
+                if (LOGIN_ENFORCED) this.goToLogin();
                 return;
             }
 
@@ -107,7 +114,7 @@ const ClientAuth = {
 
 $(function () {
     // Tanpa access token & refresh token sama sekali → ke halaman login
-    if (!ClientAuth.getCookie('__ajk-tib-at') && !ClientAuth.getCookie('__ajk-tib-rt')) {
+    if (LOGIN_ENFORCED && !ClientAuth.getCookie('__ajk-tib-at') && !ClientAuth.getCookie('__ajk-tib-rt')) {
         ClientAuth.goToLogin();
         return;
     }

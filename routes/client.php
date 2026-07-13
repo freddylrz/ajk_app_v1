@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\CheckAccessToken;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,37 +19,42 @@ use App\Http\Middleware\CheckAccessToken;
 |
 | Route admin dibuat terpisah di routes/admin.php dengan pola yang sama.
 |
+| CATATAN: middleware CheckAccessToken (proteksi login) SEMENTARA
+| dilepas — endpoint login di sisi API sedang error (bug database,
+| bukan tanggung jawab kita). Pasang kembali begitu login sudah bisa
+| dipakai: tinggal tambahkan ->middleware(CheckAccessToken::class)
+| setelah ->name('client.') di bawah ini.
+|
 */
 
 Route::prefix('client')->name('client.')
-    ->middleware(CheckAccessToken::class)
     ->group(function () {
 
-    // ── Dashboard ─────────────────────────────────────────────
-    Route::view('/dashboard', 'client.dashboard.index')
-        ->name('dashboard');
+        // ── Dashboard ─────────────────────────────────────────────
+        Route::view('/dashboard', 'client.dashboard.index')
+            ->name('dashboard');
 
-    // ── Penutupan ─────────────────────────────────────────────
-    Route::prefix('penutupan')->name('penutupan.')->group(function () {
-        Route::view('/input-data', 'client.penutupan.input-data')
-            ->name('input');
-        Route::view('/list-data', 'client.penutupan.list-data')
-            ->name('list');
-        Route::get('/detail/{id}', function (string $id) {
-            return view('client.penutupan.detail', ['id' => $id]);
-        })->name('detail');
-    });
+        // ── Penutupan ─────────────────────────────────────────────
+        Route::prefix('penutupan')->name('penutupan.')->group(function () {
+            Route::view('/input-data', 'client.penutupan.input-data')
+                ->name('input');
+            Route::view('/list-data', 'client.penutupan.list-data')
+                ->name('list');
+            Route::get('/detail/{id}', function (string $id) {
+                return view('client.penutupan.detail', ['id' => $id]);
+            })->name('detail');
+        });
 
-    // ── Klaim ─────────────────────────────────────────────────
-    Route::prefix('klaim')->name('klaim.')->group(function () {
-        Route::view('/laporan-awal', 'client.klaim.laporan-awal')
-            ->name('laporan-awal');
-        Route::view('/formulir', 'client.klaim.formulir')
-            ->name('formulir');
-        Route::view('/data', 'client.klaim.data-klaim')
-            ->name('data');
-        Route::get('/detail/{id}', function (string $id) {
-            return view('client.klaim.detail', ['id' => $id]);
-        })->name('detail');
+        // ── Klaim ─────────────────────────────────────────────────
+        Route::prefix('klaim')->name('klaim.')->group(function () {
+            Route::view('/laporan-awal', 'client.klaim.laporan-awal')
+                ->name('laporan-awal');
+            Route::view('/formulir', 'client.klaim.formulir')
+                ->name('formulir');
+            Route::view('/data', 'client.klaim.data-klaim')
+                ->name('data');
+            Route::get('/detail/{id}', function (string $id) {
+                return view('client.klaim.detail', ['id' => $id]);
+            })->name('detail');
+        });
     });
-});

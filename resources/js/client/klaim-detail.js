@@ -6,6 +6,9 @@
  * ============================================================
  */
 
+import { ClientData } from './data/dummy-data.js';
+import { ClientHelper } from './helpers.js';
+
 $(function () {
     const id = parseInt($('#detail-container').data('id'), 10);
     const k = ClientData.klaim.find(x => x.id === id);

@@ -33,7 +33,10 @@ Route::middleware([RedirectIfAccessTokenExist::class])->group(function () {
     })->name('login');
 });
 
+// Route client SEMENTARA tidak dibungkus CheckAccessToken (login API
+// sedang error di sisi DB, lihat catatan di routes/client.php).
+require __DIR__ . '/client.php';
+
 Route::middleware([CheckAccessToken::class])->group(function () {
-    require __DIR__ . '/client.php';
     require __DIR__ . '/tib.php';
 });
