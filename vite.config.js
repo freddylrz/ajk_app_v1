@@ -9,6 +9,8 @@ export default defineConfig({
                  'resources/js/app.js',
                  'resources/js/auth/login.js',
                  'resources/js/auth/logout.js',
+                 'resources/js/utilities/management_branch.js',
+                 'resources/js/utilities/management_user.js',
 
                  // Area client — 1 entry per halaman (dipanggil lewat @vite() di blade)
                  'resources/js/client/auth.js',
