@@ -190,11 +190,11 @@ $('#saveEdit').on('click', function () {
 
 $("#formUser").on("submit", async function (e) {
     e.preventDefault();
-    const url = '/api/v1/admin/utility/user/update'
+    // const url = '/api/v1/admin/utility/user/update'
 
-    if(id == 0){
-        url = '/api/v1/admin/utility/user/insert'
-    }
+    // if(id == 0){
+        // url = '/api/v1/admin/utility/user/insert'
+    // }
     if (!checkPass) {
         await Swal.fire({
             icon: 'error',
@@ -238,7 +238,7 @@ $("#formUser").on("submit", async function (e) {
         })
 
     $.ajax({
-        "url": url,
+        "url": '/api/v1/admin/utility/user/insert',
         "method": "POST",
         "timeout": 0,
         "data": data,
