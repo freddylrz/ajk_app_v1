@@ -1,11 +1,12 @@
 /**
  * ============================================================
  * PAGE: Klaim — Laporan Awal Klaim
- * Sumber data : ClientData.pesertaAsuransi
+ * API  : belum ada endpoint klaim di sisi server (ClaimController
+ *        masih kosong), jadi dropdown peserta dibiarkan kosong dan
+ *        pengiriman form menampilkan info bahwa fitur belum tersedia.
  * ============================================================
  */
 
-import { ClientData } from './data/dummy-data.js';
 import { ClientHelper } from './helpers.js';
 
 $(function () {
@@ -16,9 +17,7 @@ $(function () {
     $('#tanggal_lapor').text(`${now.getDate()} ${bulan[now.getMonth()]} ${now.getFullYear()}`);
 
     /* ── Dropdown peserta asuransi ── */
-    ClientData.pesertaAsuransi.forEach(p => {
-        $('#peserta').append(new Option(`${p.nama} — Polis: ${p.noPolis}`, p.id));
-    });
+    // TODO: sambungkan ke endpoint daftar peserta asuransi begitu tersedia.
     $('#peserta').select2({ theme: 'bootstrap-5', width: '100%' });
 
     /* ── Datepicker ── */
@@ -32,10 +31,9 @@ $(function () {
         this.value = angka ? ClientHelper.formatNumber(parseInt(angka, 10)) : '';
     });
 
-    /* ── Kirim (dummy) ── */
+    /* ── Kirim ── */
     $('#form-laporan-awal').on('submit', function (e) {
         e.preventDefault();
-        ClientHelper.notify('Laporan awal klaim berhasil dikirim. Tim kami akan segera memproses.');
-        setTimeout(() => window.location.href = '/client/klaim/data', 1200);
+        ClientHelper.notify('Fitur pelaporan klaim belum tersedia di server.', 'warning');
     });
 });

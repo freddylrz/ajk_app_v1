@@ -66,7 +66,7 @@
                         </div>
                         <div class="col-6">
                             <div class="form-group">
-                                <label>Email <small class="text-muted">(opsional)</small></label>
+                                <label>Email </label>
                                 <input type="email" class="form-control" id="email" name="email"
                                        placeholder="nama@email.com">
                             </div>
@@ -191,20 +191,22 @@
 
             <h5 class="mb-3">Hasil :</h5>
             <div class="row">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4">
                     <small class="text-muted d-block">Periode</small>
                     <strong id="output_periode">-</strong>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4">
                     <small class="text-muted d-block">Rate</small>
                     <strong id="output_rate">-</strong>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4">
                     <small class="text-muted d-block">Premi</small>
                     <strong id="output_premi">-</strong>
                 </div>
             </div>
-            <small class="form-text text-muted">Hanya untuk kredit konsumtif (Decreasing Term).</small>
+            {{-- Nilai rate & premium hasil hitung disimpan di sini untuk dikirim saat submit --}}
+            <input type="hidden" id="rate" name="rate">
+            <input type="hidden" id="premium" name="premium">
         </div>
     </div>
 
@@ -219,8 +221,8 @@
                     <div class="form-group">
                         <label>1. Foto Asli KTP <span class="text-danger">*</span></label>
                         <input type="file" class="form-control form-control-sm" style="max-width:320px;"
-                            id="file_ktp" name="file_ktp[]" accept="image/*" multiple required>
-                        <small class="form-text text-muted d-block">Tekan CTRL untuk memilih beberapa file.</small>
+                            id="file_ktp" name="file_ktp" accept="image/*" required>
+                        <small class="form-text text-muted d-block">File foto/scan KTP.</small>
                         <ul class="list-unstyled small mt-2 mb-0" id="preview_file_ktp">
                             <li class="text-muted fst-italic">Belum ada file dipilih</li>
                         </ul>
@@ -265,5 +267,6 @@
 @endsection
 
 @push('levelPluginsJs')
+    <script src="{{ asset('assets/js/plugins/sweetalert2.all.min.js') }}"></script>
     @vite(['resources/js/client/penutupan-input.js'])
 @endpush

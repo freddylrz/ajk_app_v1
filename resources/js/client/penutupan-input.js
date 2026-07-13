@@ -1,24 +1,46 @@
 /**
  * ============================================================
  * PAGE: Penutupan — Input Data (Form Deklarasi Reguler Griya)
- * Sumber data : ClientData.master
+ * API  : GET  /api/v1/client/declaration/asset  → opsi Kategori Debitur & Jenis Kelamin
+ *        POST /api/v1/client/declaration/insert → simpan deklarasi baru
  * ============================================================
  */
 
-import { ClientData } from './data/dummy-data.js';
 import { ClientHelper } from './helpers.js';
 
 $(function () {
-    const master = ClientData.master;
 
-    /* ── Isi pilihan dropdown dari data master ── */
-    master.kategoriDebitur.forEach(v => $('#kategori_debitur').append(new Option(v, v)));
-    master.jenisKelamin.forEach(v => $('#jenis_kelamin').append(new Option(v, v)));
+    /* ── Muat opsi Kategori Debitur & Jenis Kelamin dari API ──
+       Jika API gagal/belum siap, dropdown dibiarkan kosong
+       (tidak diisi data bikinan). */
+    async function loadAsset() {
+        try {
+            const res = await ClientHelper.apiFetch('/api/v1/client/declaration/asset');
+            const json = await res.json();
 
-    $('#kategori_debitur, #jenis_kelamin').select2({
-        theme: 'bootstrap-5',
-        width: '100%'
-    });
+            if (!res.ok) {
+                ClientHelper.notify(json.message || 'Gagal memuat data referensi form.', 'warning');
+                return;
+            }
+
+            (json.data?.debt_category || []).forEach(item => {
+                $('#kategori_debitur').append(new Option(item.category_name, item.id));
+            });
+
+            (json.data?.gender || []).forEach(item => {
+                $('#jenis_kelamin').append(new Option(item.name, item.id));
+            });
+        } catch (err) {
+            console.error('Gagal memuat /declaration/asset:', err);
+            ClientHelper.notify('Tidak dapat terhubung ke server untuk memuat data referensi form.', 'danger');
+        } finally {
+            $('#kategori_debitur, #jenis_kelamin').select2({
+                theme: 'bootstrap-5',
+                width: '100%'
+            });
+        }
+    }
+    loadAsset();
 
     /* ── Datepicker (format dd-mm-yyyy) ── */
     document.querySelectorAll('.datepicker').forEach(el => {
@@ -36,6 +58,52 @@ $(function () {
         const [d, m, y] = val.split('-');
         const umur = ClientHelper.hitungUmur(`${y}-${m}-${d}`);
         $('#umur').val(umur ? umur + ' Tahun' : '');
+    });
+
+    /* ── Hitung premi: memanggil API premi-calculation ──
+       Endpoint /api/v1/client/declaration/premi-calculation belum
+       diimplementasikan di server. Pemanggilannya disiapkan di
+       bawah ini (di-comment) supaya tinggal diaktifkan begitu
+       endpoint tersedia — untuk sementara hasil dibiarkan kosong. */
+    $('#btn-hitung').on('click', async function () {
+        const tenor = parseInt($('#tenor').val(), 10);
+        const periodeAwal = $('#periode_awal').val();
+        const plafond = parseInt($('#plafond_kredit').val().replace(/[^\d]/g, ''), 10);
+
+        if (!tenor || !periodeAwal || !plafond) {
+            ClientHelper.notify('Mohon lengkapi Tenor, Periode Awal, dan Plafond Kredit terlebih dahulu.', 'warning');
+            return;
+        }
+
+        // TODO: aktifkan begitu /api/v1/client/declaration/premi-calculation tersedia.
+        // try {
+        //     const res = await ClientHelper.apiFetch('/api/v1/client/declaration/premi-calculation', {
+        //         method: 'POST',
+        //         headers: { 'Content-Type': 'application/json' },
+        //         body: JSON.stringify({
+        //             tenor: tenor,
+        //             start_date: toIsoDate(periodeAwal),
+        //             plafond: plafond
+        //         })
+        //     });
+        //     const json = await res.json();
+        //
+        //     if (!res.ok) {
+        //         ClientHelper.notify(json.message || 'Gagal menghitung premi.', 'warning');
+        //         return;
+        //     }
+        //
+        //     $('#output_periode').text(json.data.periode);
+        //     $('#output_rate').text(json.data.rate + ' %');
+        //     $('#output_premi').text(ClientHelper.formatIDR(json.data.premium));
+        //     $('#rate').val(json.data.rate);
+        //     $('#premium').val(json.data.premium);
+        // } catch (err) {
+        //     console.error('Gagal memanggil /declaration/premi-calculation:', err);
+        //     ClientHelper.notify('Tidak dapat terhubung ke server.', 'danger');
+        // }
+
+        ClientHelper.notify('Fitur hitung premi belum tersedia di server.', 'warning');
     });
 
     /* ── Checkbox No. Rek & No. PK: dicentang = sudah punya nomor (bisa diisi) ── */
@@ -73,101 +141,78 @@ $(function () {
         this.value = angka ? ClientHelper.formatNumber(parseInt(angka, 10)) : '';
     });
 
-    /* ── Hitung premi (simulasi dummy) ── */
-    $('#btn-hitung').on('click', function () {
-        const tenor = parseInt($('#tenor').val(), 10);
-        const periodeAwal = $('#periode_awal').val();
-        const plafond = parseInt($('#plafond_kredit').val().replace(/[^\d]/g, ''), 10);
+    /* ── Format tanggal dd-mm-yyyy → yyyy-mm-dd (dibutuhkan API) ── */
+    function toIsoDate(val) {
+        if (!val) return '';
+        const [d, m, y] = val.split('-');
+        return `${y}-${m}-${d}`;
+    }
 
-        if (!tenor || !periodeAwal || !plafond) {
-            ClientHelper.notify('Mohon lengkapi Tenor, Periode Awal, dan Plafond Kredit terlebih dahulu.', 'warning');
-            return;
-        }
-
-        // Simulasi rate: makin panjang tenor makin besar rate (dummy)
-        const rate = Math.min(2 + (tenor / 24) * 0.85, 9.5);
-        const premi = Math.round(plafond * (rate / 100));
-
-        // Periode akhir = periode awal + tenor bulan
-        const [d, m, y] = periodeAwal.split('-');
-        const akhir = new Date(parseInt(y, 10), parseInt(m, 10) - 1 + tenor, parseInt(d, 10));
-        const pad = n => String(n).padStart(2, '0');
-        const periodeAkhir = `${pad(akhir.getDate())}-${pad(akhir.getMonth() + 1)}-${akhir.getFullYear()}`;
-
-        $('#output_periode').text(`${periodeAwal} s/d ${periodeAkhir}`);
-        $('#output_rate').text(rate.toFixed(5) + ' %');
-        $('#output_premi').text(ClientHelper.formatIDR(premi));
-
-        ClientHelper.notify('Perhitungan premi berhasil.');
-    });
-
-    /* ── Render tabel Keterangan Kesehatan dari master ── */
-    const rowsKesehatan = master.kesehatanQuestions.map(q => `
-        <tr data-no="${q.no}" data-trigger="${q.trigger}" ${q.khususWanita ? 'data-khusus-wanita="1"' : ''}>
-            <td class="text-center fw-bold">${q.no}</td>
-            <td>${q.pertanyaan}</td>
-            <td>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="jawaban_${q.no}" id="jawaban_${q.no}_ya" value="YA">
-                    <label class="form-check-label" for="jawaban_${q.no}_ya">Ya</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="jawaban_${q.no}" id="jawaban_${q.no}_tidak" value="TIDAK">
-                    <label class="form-check-label" for="jawaban_${q.no}_tidak">Tidak</label>
-                </div>
-            </td>
-            <td>
-                <input type="text" class="form-control" id="keterangan_${q.no}" placeholder="Keterangan">
-            </td>
-        </tr>
-    `).join('');
-    $('#tbody-kesehatan').html(rowsKesehatan);
-
-    /* ── Wajibkan Keterangan hanya saat jawaban = trigger pertanyaan ── */
-    $('#tbody-kesehatan').on('change', 'input[type="radio"]', function () {
-        const row = $(this).closest('tr');
-        const trigger = row.data('trigger');
-        const keteranganInput = row.find('input[id^="keterangan_"]');
-        keteranganInput.prop('required', this.value === trigger);
-    });
-
-    /* ── Pertanyaan No. 5 (khusus wanita) menyesuaikan Jenis Kelamin ── */
-    $('#jenis_kelamin').on('change', function () {
-        const row = $('#tbody-kesehatan tr[data-khusus-wanita="1"]');
-        const isPerempuan = $(this).val() === 'Perempuan';
-
-        row.find('input[type="radio"], input[type="text"]').prop('disabled', !isPerempuan);
-        if (!isPerempuan) {
-            row.find('input[type="radio"]').prop('checked', false).prop('required', false);
-            row.find('input[type="text"]').val('-').prop('required', false);
-        } else {
-            row.find('input[type="text"]').val('');
-        }
-    });
-    $('#jenis_kelamin').trigger('change');
-
-    /* ── Simpan (dummy) ── */
-    $('#form-deklarasi').on('submit', function (e) {
+    /* ── Simpan ke API ── */
+    $('#form-deklarasi').on('submit', async function (e) {
         e.preventDefault();
 
-        if ($('#output_premi').text() === '-') {
-            ClientHelper.notify('Silakan klik tombol Hitung terlebih dahulu sebelum menyimpan.', 'warning');
-            return;
+        const submitBtn = $(this).find('button[type="submit"]');
+        submitBtn.prop('disabled', true);
+
+        try {
+            const ktpFile = $('#file_ktp')[0].files[0] || null;
+            const debtorFiles = Array.from($('#file_pk')[0].files || []);
+
+            const payload = {
+                policy_no: '',
+                insured_name: $('#nama_debitur').val(),
+                nik: $('#no_ktp').val(),
+                gender_id: $('#jenis_kelamin').val(),
+                birth_place: '',
+                birth_date: toIsoDate($('#tanggal_lahir').val()),
+                phone_no: $('#no_hp').val(),
+                email: $('#email').val(),
+                ktp_address: $('#alamat_ktp').val(),
+                domicile_address: $('#alamat_domisili').val(),
+                debtor_category_id: $('#kategori_debitur').val(),
+                company_name: $('#nama_instansi').val(),
+                position_name: $('#pangkat_jabatan').val(),
+                account_no: $('#no_rek').val(),
+                pk_no: $('#no_pk').val(),
+                tenor: $('#tenor').val(),
+                start_date: toIsoDate($('#periode_awal').val()),
+                end_date: (() => {
+                    const tenor = parseInt($('#tenor').val(), 10);
+                    const periodeAwal = $('#periode_awal').val();
+                    if (!tenor || !periodeAwal) return '';
+                    const [d, m, y] = periodeAwal.split('-');
+                    const akhir = new Date(parseInt(y, 10), parseInt(m, 10) - 1 + tenor, parseInt(d, 10));
+                    const pad = n => String(n).padStart(2, '0');
+                    return `${akhir.getFullYear()}-${pad(akhir.getMonth() + 1)}-${pad(akhir.getDate())}`;
+                })(),
+                plafond: $('#plafond_kredit').val().replace(/[^\d]/g, ''),
+                rate: $('#rate').val(),
+                premium: $('#premium').val().replace(/[^\d]/g, ''),
+                ktp_file: ktpFile ? await ClientHelper.fileToDataUri(ktpFile) : null,
+                debtor_file: await Promise.all(debtorFiles.map(f => ClientHelper.fileToDataUri(f))),
+            };
+
+            const res = await ClientHelper.apiFetch('/api/v1/client/declaration/insert', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const json = await res.json();
+
+            if (!res.ok) {
+                ClientHelper.notify(json.message || 'Data gagal disimpan.', res.status === 422 ? 'warning' : 'danger');
+                return;
+            }
+
+            ClientHelper.notify(json.message || 'Data berhasil disimpan.');
+            setTimeout(() => window.location.href = '/client/penutupan/list-data', 1200);
+        } catch (err) {
+            console.error('Gagal mengirim /declaration/insert:', err);
+            ClientHelper.notify('Tidak dapat terhubung ke server. Silakan coba lagi.', 'danger');
+        } finally {
+            submitBtn.prop('disabled', false);
         }
-
-        let kesehatanLengkap = true;
-        $('#tbody-kesehatan tr').each(function () {
-            if ($(this).find('input[type="radio"]').prop('disabled')) return;
-            const terpilih = $(this).find('input[type="radio"]:checked').val();
-            if (!terpilih) kesehatanLengkap = false;
-        });
-
-        if (!kesehatanLengkap) {
-            ClientHelper.notify('Mohon lengkapi seluruh jawaban Keterangan Kesehatan.', 'warning');
-            return;
-        }
-
-        ClientHelper.notify('Data peserta berhasil disimpan dan menunggu validasi SPV.');
-        setTimeout(() => window.location.href = '/client/penutupan/list-data', 1200);
     });
 });
