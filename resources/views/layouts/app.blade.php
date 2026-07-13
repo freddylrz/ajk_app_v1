@@ -4,7 +4,11 @@
        /client/* → tampilan client (menu client, tema hijau .client-area)
        selainnya → tampilan admin (tema default)
      ============================================================ --}}
-@php($isClient = Request::is('client*'))
+@php
+    $isClient = Request::is('client*');
+    $isTib = Request::is('tib*');
+    $isIns = Request::is('ins*');
+@endphp
 
 <!DOCTYPE html>
 <html lang="id">
@@ -40,7 +44,11 @@
     @stack('pageStyles')
 </head>
 
-<body class="{{ $isClient ? 'client-area' : 'admin-area' }}">
+<body @class([
+    'client-area' => $isClient,
+    'ins-area' => $isIns,
+    'tib-area' => !$isClient && !$isIns,
+])>
 <!-- [ Pre-loader ] -->
 <div class="loader-bg">
     <div class="loader-track">
@@ -127,46 +135,46 @@
                             </li>
                         </ul>
                     </li>
-                @else
-                    {{-- ══════════ MENU ADMIN ══════════ --}}
-                    <li class="pc-item {{ Request::is('admin/dashboard') ? 'active' : '' }}">
-                        <a href="/admin/dashboard" class="pc-link">
+                @elseif($isTib)
+                    {{-- ══════════ MENU TIB ══════════ --}}
+                    <li class="pc-item {{ Request::is('tib/dashboard') ? 'active' : '' }}">
+                        <a href="/tib/dashboard" class="pc-link">
                             <i class="ti ti-dashboard"></i>
-                            <span class="pc-mtext">Dashboard</span>
+                            <span class="pc-mtext">Beranda</span>
                         </a>
                     </li>
 
-                    <li class="pc-item pc-hasmenu {{ Request::is('admin/penutupan/*') ? 'active' : '' }}">
+                    <li class="pc-item pc-hasmenu {{ Request::is('tib/penutupan/*') ? 'active' : '' }}">
                         <a href="#!" class="pc-link">
                             <i class="ti ti-file-certificate"></i>
                             <span class="pc-mtext">Penutupan</span>
                             <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
                         </a>
                         <ul class="pc-submenu">
-                            <li class="pc-item {{ Request::is('admin/penutupan/data-not-validation') ? 'active' : '' }}">
-                                <a class="pc-link" href="/admin/penutupan/data-not-validation">Dalam Proses</a>
+                            <li class="pc-item {{ Request::is('tib/penutupan/list-data') ? 'active' : '' }}">
+                                <a class="pc-link" href="/tib/penutupan/list-data">Dalam Proses</a>
                             </li>
-                            <li class="pc-item {{ Request::is('admin/penutupan/data-validation') ? 'active' : '' }}">
-                                <a class="pc-link" href="/admin/penutupan/data-validation">Terbit Polis</a>
+                            <li class="pc-item {{ Request::is('tib/penutupan/data-validation') ? 'active' : '' }}">
+                                <a class="pc-link" href="/tib/penutupan/data-validation">Terbit Polis</a>
                             </li>
-                            <li class="pc-item {{ Request::is('admin/penutupan/data-expired') ? 'active' : '' }}">
-                                <a class="pc-link" href="/admin/penutupan/data-expired">Polis Kedaluarsa</a>
-                            </li>
-                            <li class="pc-item {{ Request::is('admin/penutupan/rekap') ? 'active' : '' }}">
-                                <a class="pc-link" href="/admin/penutupan/rekap">Rekap</a>
+                            <li class="pc-item {{ Request::is('tib/penutupan/rekap') ? 'active' : '' }}">
+                                <a class="pc-link" href="/tib/penutupan/rekap">Rekap</a>
                             </li>
                         </ul>
                     </li>
 
-                    <li class="pc-item pc-hasmenu {{ Request::is('admin/klaim/*') ? 'active' : '' }}">
+                    <li class="pc-item pc-hasmenu {{ Request::is('tib/klaim/*') ? 'active' : '' }}">
                         <a href="#!" class="pc-link">
                             <i class="ti ti-file-alert"></i>
                             <span class="pc-mtext">Klaim</span>
                             <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
                         </a>
                         <ul class="pc-submenu">
-                            <li class="pc-item {{ Request::is('admin/klaim/rekap') ? 'active' : '' }}">
-                                <a class="pc-link" href="/admin/klaim/rekap">Rekap</a>
+                            <li class="pc-item {{ Request::is('tib/klaim/list') ? 'active' : '' }}">
+                                <a class="pc-link" href="/tib/klaim/rekap">List Data</a>
+                            </li>
+                            <li class="pc-item {{ Request::is('tib/klaim/rekap') ? 'active' : '' }}">
+                                <a class="pc-link" href="/tib/klaim/rekap">Rekap</a>
                             </li>
                         </ul>
                     </li>
@@ -266,6 +274,7 @@
 <script src="{{ asset('assets/js/plugins/dataTables.bootstrap5.min.js') }}"></script>
 <script src="{{ asset('assets/js/plugins/datepicker-full.min.js') }}"></script>
 <script src="{{ asset('assets/js/plugins/select2.min.js') }}"></script>
+@vite(['resources/js/auth/logout.js'])
 
 <script>
     window.__cookieDomain = @json(config('setup.domain') ?: null);

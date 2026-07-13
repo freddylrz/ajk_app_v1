@@ -8,6 +8,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Illuminate\Auth\AuthenticationException;
 use App\Http\Middleware\Api\DecryptSanctumToken;
+use App\Http\Middleware\Api\SessionExpired;
+use App\Http\Middleware\Api\ValidateTimestamp;
+use App\Http\Middleware\Api\CheckRole;
 use App\Http\Middleware\TrustProxies;
 
 
@@ -30,10 +33,10 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         $middleware->alias([
-            'DecryptSanctumToken' => \App\Http\Middleware\Api\DecryptSanctumToken::class,
-            'SessionExpired'      => \App\Http\Middleware\Api\SessionExpired::class,
-            'ValidateTimestamp'   => \App\Http\Middleware\Api\ValidateTimestamp::class,
-            'CheckRole'           => \App\Http\Middleware\Api\CheckRole::class,
+            'DecryptSanctumToken' => DecryptSanctumToken::class,
+            'SessionExpired'      => SessionExpired::class,
+            'ValidateTimestamp'   => ValidateTimestamp::class,
+            'CheckRole'           => CheckRole::class,
         ]);
 
         $middleware->use([

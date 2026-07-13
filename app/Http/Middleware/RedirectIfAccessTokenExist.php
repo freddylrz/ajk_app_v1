@@ -15,8 +15,8 @@ class RedirectIfAccessTokenExist
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (isset($_COOKIE['__tib-at']) && isset($_COOKIE['__tib-rt'])) {
-            return redirect('/dashboard');
+        if (isset($_COOKIE['__ajk-tib-at']) && isset($_COOKIE['__ajk-tib-rt'])) {
+            return redirect('/tib/dashboard');
         }
 
         return $next($request);
