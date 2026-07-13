@@ -147,7 +147,7 @@
                 </form>
             </div>
             <!-- /.modal-content -->
-        </div>
+        </div>  
         <!-- /.modal-dialog -->
     </div>
     @push('levelPluginsJsHeader')

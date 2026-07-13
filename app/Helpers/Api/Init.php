@@ -12,8 +12,23 @@ Class Init
     public static function createId(): string
     {
         return now()->format('ymdHisu') . random_int(1000, 9999);
-    } 
+    }
+    public static function generateDeclarationNo()
+    {
+        $prefix = 'DEC' . now()->format('ym');
 
+        $lastNo = DB::table('operational.tb_declaration')
+            ->where('declaration_no', 'like', $prefix . '%')
+            ->orderByDesc('declaration_no')
+            ->value('declaration_no');
+
+        $running = empty($lastNo)
+            ? 1
+            : ((int) substr($lastNo, -6)) + 1;
+
+        return $prefix . str_pad($running, 6, '0', STR_PAD_LEFT);
+    }
+    
     public static function decodeFile($data)
     {
         try {

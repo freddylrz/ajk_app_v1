@@ -26,3 +26,4 @@ Thumbs.db
 database/migrations/2026_07_11_090456_create_personal_access_tokens_table.php
 composer.lock
 composer.json
+public/upload
