@@ -68,16 +68,28 @@ export const ClientHelper = {
         return new URLSearchParams(window.location.search).get(name);
     },
 
-    /** Notifikasi sukses/gagal (plugin notifier bawaan template) */
+    /** Notifikasi sukses/gagal — modal SweetAlert2 biasa (bukan toast) */
     notify(message, type = 'success') {
-        if (typeof notifier !== 'undefined') {
-            notifier.show(
-                type === 'success' ? 'Berhasil!' : 'Perhatian!',
-                message,
-                type,
-                '',
-                4000
-            );
+        const icons = {
+            success: 'success',
+            warning: 'warning',
+            danger: 'error',
+            info: 'info'
+        };
+        const titles = {
+            success: 'Berhasil!',
+            warning: 'Perhatian!',
+            danger: 'Gagal!',
+            info: 'Informasi'
+        };
+
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                icon: icons[type] || 'info',
+                title: titles[type] || 'Informasi',
+                text: message,
+                confirmButtonColor: '#00a651'
+            });
         } else {
             alert(message);
         }

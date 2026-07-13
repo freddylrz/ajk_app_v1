@@ -200,13 +200,7 @@
                         <i class="ti ti-menu-2"></i>
                     </a>
                 </li>
-                @if($isClient)
-                    <li class="pc-h-item d-none d-md-flex align-items-center ms-2" style="gap:8px;">
-                        <span style="font-size:15px;font-weight:800;color:#008743;">
-                            <i class="ti ti-building-bank"></i> BNI Cabang KC KUNINGAN
-                        </span>
-                    </li>
-                @else
+                @if(!$isClient)
                     @hasSection('pageTitle')
                         <li class="pc-h-item d-none d-md-flex align-items-center ms-2" style="gap:6px;">
                             <span style="color:#bbb;font-size:16px;">›</span>
@@ -234,9 +228,6 @@
             @hasSection('pageTitle')
                 <div class="page-title-box">
                     <h2><i class="@yield('pageIcon', 'ti ti-file')"></i>@yield('pageTitle')</h2>
-                    <div class="breadcrumb-note">
-                        <i class="ti ti-home"></i> Beranda &rsaquo; @yield('pageTitle')
-                    </div>
                 </div>
             @endif
         @endif
@@ -282,6 +273,8 @@
 </script>
 
 @if($isClient)
+    {{-- Alert client pakai SweetAlert2 (bukan toast notifier) --}}
+    <script src="{{ asset('assets/js/plugins/sweetalert2.all.min.js') }}"></script>
     {{-- Sesi: info user, refresh token, logout (API /api/v1/auth). Data
          dummy & helper diimpor lewat ES module oleh masing-masing skrip
          halaman (lihat @push('pageScripts') di tiap view client). --}}

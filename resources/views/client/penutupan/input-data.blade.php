@@ -88,8 +88,8 @@
                             <label>No. Rekening Pinjaman <span class="required-star">*</span></label>
                             <div class="input-group">
                                 <div class="input-group-text">
-                                    <input class="form-check-input mt-0" type="checkbox" id="cek_no_rek" checked
-                                           title="Centang jika belum ada nomor rekening">
+                                    <input class="form-check-input mt-0" type="checkbox" id="cek_no_rek"
+                                           title="Centang jika Anda sudah memiliki nomor rekening">
                                 </div>
                                 <input type="text" class="form-control" id="no_rek" name="no_rek" value="0" readonly>
                             </div>
@@ -98,8 +98,8 @@
                             <label>No. PK <span class="required-star">*</span></label>
                             <div class="input-group">
                                 <div class="input-group-text">
-                                    <input class="form-check-input mt-0" type="checkbox" id="cek_no_pk" checked
-                                           title="Centang jika belum ada nomor PK">
+                                    <input class="form-check-input mt-0" type="checkbox" id="cek_no_pk"
+                                           title="Centang jika Anda sudah memiliki nomor PK">
                                 </div>
                                 <input type="text" class="form-control" id="no_pk" name="no_pk" value="0" readonly>
                             </div>
@@ -191,7 +191,7 @@
     {{-- ══ KETERANGAN KESEHATAN ══ --}}
     <div class="card">
         <div class="card-header">
-            <i class="ti ti-heart-rate-monitor"></i>
+            <i class="ti ti-building-hospital"></i>
             <h5>Keterangan Kesehatan</h5>
         </div>
         <div class="card-body">
@@ -225,18 +225,19 @@
         <div class="card-body">
             <div class="upload-item">
                 <div class="upload-title"><i class="ti ti-id"></i> 1. Foto Asli KTP <span class="required-star">*</span></div>
-                <input type="file" class="form-control" name="file_ktp[]" accept="image/*" multiple required>
+                <input type="file" class="form-control form-control-sm upload-input" id="file_ktp" name="file_ktp[]" accept="image/*" multiple required>
                 <div class="form-hint">Tekan CTRL untuk memilih beberapa file.</div>
+                <ul class="upload-file-list" id="preview_file_ktp">
+                    <li class="upload-file-empty">Belum ada file dipilih</li>
+                </ul>
             </div>
             <div class="upload-item">
                 <div class="upload-title"><i class="ti ti-signature"></i> 2. Foto Debitur pada Saat Penandatanganan PK <small>(Posisi Berdiri Tampak Depan dan Tampak Samping)</small> <span class="required-star">*</span></div>
-                <input type="file" class="form-control" name="file_pk[]" accept="image/*" multiple required>
+                <input type="file" class="form-control form-control-sm upload-input" id="file_pk" name="file_pk[]" accept="image/*" multiple required>
                 <div class="form-hint">Tekan CTRL untuk memilih beberapa file.</div>
-            </div>
-            <div class="upload-item">
-                <div class="upload-title"><i class="ti ti-file-text"></i> 3. Surat Pernyataan Kesehatan (SPK) yang Sudah Diisi Lengkap dan Ditandatangani <span class="required-star">*</span></div>
-                <input type="file" class="form-control" name="file_spk" accept="application/pdf" required>
-                <div class="form-hint">Dokumen dalam bentuk PDF.</div>
+                <ul class="upload-file-list" id="preview_file_pk">
+                    <li class="upload-file-empty">Belum ada file dipilih</li>
+                </ul>
             </div>
         </div>
     </div>
@@ -246,7 +247,7 @@
         <div class="card-body">
             <div class="callout-attention mb-4">
                 <h5><i class="ti ti-info-circle"></i> Perhatian :</h5>
-                <p>Mohon dalam mengisi data debitur dan SPK harus sesuai dengan data yang sebenarnya,
+                <p>Mohon dalam mengisi data debitur dan Keterangan Kesehatan harus sesuai dengan data yang sebenarnya,
                    agar tidak terjadi kendala pada saat proses pengajuan klaim.</p>
                 <p>Apabila dalam 14 hari belum melengkapi data debitur, maka secara otomatis sistem
                    akan terkunci — silakan hubungi PIC TuguBro.</p>

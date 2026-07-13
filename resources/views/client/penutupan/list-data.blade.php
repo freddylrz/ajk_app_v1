@@ -8,7 +8,7 @@
 <div class="card">
     <div class="card-header">
         <i class="ti ti-table"></i>
-        <h5>Data Penutupan — BNI Cabang KC KUNINGAN</h5>
+        <h5>Data Penutupan</h5>
         <a href="{{ route('client.penutupan.input') }}" class="btn btn-warning btn-sm ms-auto">
             <i class="ti ti-plus"></i> Input Data Baru
         </a>
