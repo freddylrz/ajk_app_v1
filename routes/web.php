@@ -22,14 +22,18 @@ Route::get('/login', function () {
 | - routes/client.php → halaman user client  (prefix /client, name client.*)
 | - routes/admin.php  → halaman user admin   (prefix /admin,  name admin.*)
 */
-require __DIR__ . '/client.php';
 
 
-// Route::middleware([RedirectIfAccessTokenExist::class])->group(function () {
+Route::middleware([RedirectIfAccessTokenExist::class])->group(function () {
+    Route::get('/', function () {
+        return view('auth.login');
+    })->name('');
+    Route::get('/login', function () {
+        return view('auth.login');
+    })->name('login');
+});
 
-
-// });
-
-// Route::middleware([CheckAccessToken::class])->group(function () {
-//     
-// });
+Route::middleware([CheckAccessToken::class])->group(function () {
+    require __DIR__ . '/client.php';
+    require __DIR__ . '/tib.php';
+});
