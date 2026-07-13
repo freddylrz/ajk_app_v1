@@ -5,11 +5,11 @@
 <div class="pct-body">
 <div class="card">
     <div class="card-header">
-        <h3>Penutupan Dalam Proses</h3>
+        <h3>Penutupan Terbit Polis</h3>
     </div>
     <div class="card-body">
         <div class="table-responsive dt-responsive">
-            <table class="table table-striped table-bordered nowrap" id="table-penutupan" style="width:100%">
+            <table class="table table-striped table-bordered nowrap" id="table-terbit-polis" style="width:100%">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -34,5 +34,5 @@
 @endsection
 
 @push('levelPluginsJs')
-    @vite(['resources/js/client/penutupan-list.js'])
+    @vite(['resources/js/client/penutupan-terbit-polis.js'])
 @endpush
