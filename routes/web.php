@@ -9,6 +9,11 @@ Route::get('/', function () {
     return view('home');
 })->name('');
 
+// Halaman login — jika sudah punya token, langsung ke dashboard client
+Route::get('/login', function () {
+    return view('auth.login');
+})->middleware(RedirectIfAccessTokenExist::class)->name('login');
+
 /*
 |--------------------------------------------------------------------------
 | Route per role

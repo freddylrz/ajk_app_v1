@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\CheckAccessToken;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +22,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('client')->name('client.')->group(function () {
+Route::prefix('client')->name('client.')
+    ->middleware(CheckAccessToken::class)
+    ->group(function () {
 
     // ── Dashboard ─────────────────────────────────────────────
     Route::view('/dashboard', 'client.dashboard.index')

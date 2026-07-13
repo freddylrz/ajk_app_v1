@@ -15,8 +15,9 @@ class RedirectIfAccessTokenExist
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (isset($_COOKIE['__tib-at']) && isset($_COOKIE['__tib-rt'])) {
-            return redirect('/dashboard');
+        // Nama cookie sesuai yang di-set AuthController API v1
+        if (isset($_COOKIE['__ajk-tib-at']) && isset($_COOKIE['__ajk-tib-rt'])) {
+            return redirect('/client/dashboard');
         }
 
         return $next($request);

@@ -92,11 +92,7 @@
       <script src="{{ asset('assets/js/config.js') }}"></script>
       <script src="{{ asset('assets/js/pcoded.js') }}"></script>
       <script src="{{ asset('assets/js/plugins/feather.min.js') }}"></script>
-      @vite(['resources/js/auth/login.js'])
-      <script>
-        const authBackendUrl = '{{ config('setup.auth_backend_url') }}';
-        const domain = '{{ config('setup.domain') }}';
-    </script>
+      <script src="{{ asset('assets/js/auth/login.js') }}"></script>
    </body>
    <!-- [Body] end -->
 </html>

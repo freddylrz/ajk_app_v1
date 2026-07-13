@@ -15,8 +15,9 @@ class CheckAccessToken
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Get access token from cookie
-        $data = $_COOKIE['__tib-rt'] ?? null;
+        // Cek refresh token dari cookie (nama cookie sesuai yang di-set
+        // AuthController API v1: __ajk-tib-at / __ajk-tib-rt)
+        $data = $request->cookie('__ajk-tib-rt') ?? ($_COOKIE['__ajk-tib-rt'] ?? null);
 
         if (!$data) {
             return redirect('/login');

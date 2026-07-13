@@ -276,6 +276,8 @@
     {{-- Data dummy + helper khusus client (nanti diganti panggilan API) --}}
     <script src="{{ asset('assets/js/client/data/dummy-data.js') }}"></script>
     <script src="{{ asset('assets/js/client/helpers.js') }}"></script>
+    {{-- Sesi: info user, refresh token, logout (API /api/v1/auth) --}}
+    <script src="{{ asset('assets/js/client/auth.js') }}"></script>
 @endif
 
 @stack('levelPluginsJs')
