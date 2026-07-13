@@ -55,6 +55,11 @@ function renderAsset(response) {
         text: "Pilih Role"
     }));
 
+    $('#branch_id').html($('<option>', {
+        value: '',
+        text: "Pilih Branch"
+    }));
+
     $.each(response.role, function (i, item) {
         $('#role_id').append($('<option>', {
             value: item.role_id,
@@ -85,11 +90,11 @@ $(document).on('change', '#role_id', function () {
     $('#branch_id').prop('required', showCabang);
 
     if (!showCabang) {
-        $('#branch_id').val([]).trigger('change');
+        $('#branch_id').val('').trigger('change');
     }
 
 });
-
+let table, editRow
 function getList() {
     return new Promise((resolve, reject) => {
 
@@ -99,7 +104,7 @@ function getList() {
             "timeout": 0,
         }).done(async function (response) {
 
-            $('#table').DataTable({
+            table = $('#table').DataTable({
                 "processing": false,
                 "pageLength": 25,
                 "autoWidth": false,
@@ -115,7 +120,9 @@ function getList() {
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
+                    { "data": "display_name" },
                     { "data": "username" },
+                    { "data": "role_name" },
                     {
                         "data": "branch_name",
                         defaultContent: "-",
@@ -161,15 +168,45 @@ function getList() {
                 ],
             });
             initTooltips();
-        })
+        });
+        $('#table tbody').on('click', '.btnEdit', async function () {
+            editRow = table.row($(this).closest('tr'));
+            $('#user_id').val($(this).data('id'))
+            const data = editRow.data();
+
+            showDetail(data);
+        });
         resolve();
     })
 }
 
+let isLoadingData = false;
 
-$(document).on('click', '.btnEdit', function () {
-    openModalResetPassword($(this).data('id'))
-})
+function showDetail(data) {
+    isLoadingData = true;
+
+    Object.keys(data).forEach(key => {
+        const el = document.getElementById(key);
+
+        if (!el) return;
+
+        el.value = data[key] ?? '';
+
+        if (el.tagName === 'SELECT') {
+            $(el).trigger('change');
+        }
+    });
+
+    isLoadingData = false;
+
+    bootstrap.Modal.getOrCreateInstance(
+        document.getElementById('modal-add')
+    ).show();
+}
+
+// $(document).on('click', '.btnEdit', function () {
+//     openModalResetPassword($(this).data('id'))
+// })
 
 $(document).on('click', '.btnDelete', function () {
     updateDeleteUser(0, $(this).data('id'))
@@ -190,11 +227,11 @@ $('#saveEdit').on('click', function () {
 
 $("#formUser").on("submit", async function (e) {
     e.preventDefault();
-    // const url = '/api/v1/admin/utility/user/update'
+    let url = '/api/v1/admin/utility/user/update'
 
-    // if(id == 0){
-        // url = '/api/v1/admin/utility/user/insert'
-    // }
+    if ($('#user_id').val() == 0){
+        url = '/api/v1/admin/utility/user/insert'
+    }
     if (!checkPass) {
         await Swal.fire({
             icon: 'error',
@@ -233,12 +270,12 @@ $("#formUser").on("submit", async function (e) {
             "username": $('#name').val(),
             "role_ids": [$('#role_id').val()],
             "is_active": 1,
-            "branch_ids": $('#branch_id').val() || [],
+            "branch_ids": [$('#branch_id').val()] || [],
             "password": $('#confirm_password').val(),
         })
 
     $.ajax({
-        "url": '/api/v1/admin/utility/user/insert',
+        "url": url,
         "method": "POST",
         "timeout": 0,
         "data": data,
@@ -286,7 +323,7 @@ function openModalResetPassword(id) {
 
 async function updateDeleteUser(stat = 0, id = 0) {
     let dataPayload = {};
-    const url = '/api/v1/admin/utility/user/update'
+    let url = '/api/v1/admin/utility/user/update'
     if (stat === 0) { // Untuk operasi hapus
         url = '/api/v1/admin/utility/user/delete'
 

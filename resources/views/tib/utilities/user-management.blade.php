@@ -20,7 +20,9 @@
                         <thead>
                             <tr>
                                 <th>No</th>
+                                <th>Display Name</th>
                                 <th>Username</th>
+                                <th>Role</th>
                                 <th>Cabang</th>
                                 <th>Status</th>
                                 <th>Dibuat</th>
@@ -87,6 +89,7 @@
                 <form method="POST" action=" " id="formUser">
                     @csrf
                     <div class="modal-body">
+                        <input type="hidden" id="user_id" value="0">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -113,7 +116,7 @@
                                     <label>
                                         Cabang
                                     </label>
-                                    <select name="branch_id[]" id="branch_id" class="form-control select2" multiple
+                                    <select name="branch_id[]" id="branch_id" class="form-control select2"
                                         required>
 
                                     </select>
