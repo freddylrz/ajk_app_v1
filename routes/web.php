@@ -23,7 +23,7 @@ Route::middleware([RedirectIfAccessTokenExist::class])->group(function () {
     })->name('login');
 });
 
-require __DIR__ . '/client.php';
 Route::middleware([CheckAccessToken::class])->group(function () {
     require __DIR__ . '/tib.php';
+    require __DIR__ . '/client.php';
 });
