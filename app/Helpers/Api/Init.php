@@ -34,6 +34,14 @@ Class Init
             ->value('branch_id');
     }
 
+    public static function getRoleId()
+    {
+        return DB::table('role_user')
+            ->where('user_id', Auth::id())
+            ->pluck('role_id')
+            ->toArray();
+    }
+
     public static function decodeFile($data)
     {
         try {
