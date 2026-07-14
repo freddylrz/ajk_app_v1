@@ -123,7 +123,7 @@ $(function () {
             $('#d-files-polis').html(`
                 <li>
                     <i class="ti ti-paperclip"></i>
-                    <a href="/${upload.policy.file_path}${upload.policy.file_name}" target="_blank" rel="noopener">
+                    <a href="/${upload.policy.file_path}/${upload.policy.file_name}" target="_blank" rel="noopener">
                         ${upload.policy.file_name}
                     </a>
                 </li>
