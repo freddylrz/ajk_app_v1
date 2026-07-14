@@ -34,9 +34,14 @@ Route::prefix('client')->name('client.')
                 ->name('input');
             Route::view('/list-data', 'client.penutupan.list-data')
                 ->name('list');
+            Route::view('/terbit-polis', 'client.penutupan.terbit-polis')
+                ->name('terbit-polis');
             Route::get('/detail/{id}', function (string $id) {
                 return view('client.penutupan.detail', ['id' => $id]);
             })->name('detail');
+            Route::get('/update/{id}', function (string $id) {
+                return view('client.penutupan.update-data', ['id' => $id]);
+            })->name('update');
         });
 
         // ── Klaim ─────────────────────────────────────────────────

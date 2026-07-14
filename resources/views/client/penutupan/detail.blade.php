@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-@section('pageTitle', 'Detail Penutupan')
-
 @section('content')
 
 <div class="pct-body">
@@ -10,9 +8,23 @@
 
     <div class="card">
         <div class="card-header">
-            <i class="ti ti-file-certificate"></i>
-            <h3>No. Polis : <span id="head-no-polis">-</span></h3>
-            <span class="ms-auto" id="head-status"></span>
+            <div class="row align-items-center">
+                <div class="col-12 text-center mb-2">
+                    <h3 class="mb-0">
+                        <span id="head-no-polis">-</span>
+                    </h3>
+                </div>
+
+                <div class="col-6">
+                    <h5 class="mb-0">
+                        No. Polis : <span id="head-no-polis-2">-</span>
+                    </h5>
+                </div>
+
+                <div class="col-6 text-end">
+                    <span id="head-status"></span>
+                </div>
+            </div>
         </div>
         <div class="card-body">
             <div class="row">
@@ -84,13 +96,13 @@
                             <strong id="d-tenor">-</strong>
                         </div>
                         <div class="col-6 mb-3">
-                            <small class="text-muted d-block">Input Date</small>
-                            <strong id="d-input-date">-</strong>
+                            <small class="text-muted d-block">Periode Awal</small>
+                            <strong id="d-periode-awal">-</strong>
                         </div>
                     </div>
                     <div class="mb-3">
-                        <small class="text-muted d-block">Periode</small>
-                        <strong id="d-periode">-</strong>
+                        <small class="text-muted d-block">Periode Akhir</small>
+                        <strong id="d-periode-akhir">-</strong>
                     </div>
                 </div>
 
@@ -125,33 +137,28 @@
                 </div>
             </div>
 
-            <div class="text-end mt-3">
-                <a href="{{ route('client.penutupan.list') }}" class="btn btn-danger">
-                    <i class="ti ti-arrow-left"></i> Kembali
-                </a>
+            {{-- Aksi khusus SPV: validasi (tampil hanya jika role SPV & status Menunggu Validasi SPV) --}}
+            <div class="alert alert-light border d-none" id="area-validasi-spv">
+                <h5 class="mb-3"><i class="ti ti-user-check"></i> Validasi SPV</h5>
+                <div class="form-group">
+                    <label>Catatan</label>
+                    <textarea class="form-control" id="catatan_validasi" rows="2"
+                              placeholder="Wajib diisi jika data dikembalikan ke Operator"></textarea>
+                </div>
+                <div class="d-flex justify-content-end gap-2 flex-wrap mt-2">
+                    <button type="button" class="btn btn-warning" id="btn-kembalikan">
+                        <i class="ti ti-arrow-back-up"></i> Kembalikan ke Operator
+                    </button>
+                    <button type="button" class="btn btn-success" id="btn-setujui">
+                        <i class="ti ti-check"></i> Setujui &amp; Teruskan ke TuguBro
+                    </button>
+                </div>
             </div>
-        </div>
-    </div>
 
-    {{-- ══ Keterangan Kesehatan ══ --}}
-    <div class="card">
-        <div class="card-header">
-            <i class="ti ti-heart-rate-monitor"></i>
-            <h3>Keterangan Kesehatan</h3>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive dt-responsive">
-                <table class="table table-striped table-bordered nowrap" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th style="width:60px;">No.</th>
-                            <th>Pertanyaan</th>
-                            <th style="width:110px;">Jawaban</th>
-                            <th style="width:260px;">Keterangan</th>
-                        </tr>
-                    </thead>
-                    <tbody id="d-kesehatan"></tbody>
-                </table>
+            <div class="text-end mt-3 d-flex justify-content-end gap-2 flex-wrap">
+                <a href="#" class="btn btn-success d-none" id="btn-edit">
+                    <i class="ti ti-edit"></i> Edit Data
+                </a>
             </div>
         </div>
     </div>

@@ -1,16 +1,14 @@
 @extends('layouts.app')
 
-@section('pageTitle', 'Form Deklarasi')
-
 @section('content')
 
 <div class="pct-body">
-<form id="form-deklarasi">
+<form id="form-deklarasi" data-id="{{ $id }}">
 
     {{-- ══ DATA DEBITUR ══ --}}
     <div class="card">
         <div class="card-header">
-            <h3>Data Debitur</h3>
+            <h3>Edit Data Debitur</h3>
         </div>
         <div class="card-body">
             <div class="row">
@@ -220,10 +218,11 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>1. Foto Asli KTP <span class="text-danger">*</span></label>
+                        <label>1. Foto Asli KTP</label>
+                        <ul class="list-unstyled small mb-2" id="current_file_ktp"></ul>
                         <input type="file" class="form-control form-control-sm" style="max-width:320px;"
-                            id="file_ktp" name="file_ktp" accept="image/*" required>
-                        <small class="form-text text-muted d-block">File foto/scan KTP.</small>
+                            id="file_ktp" name="file_ktp" accept="image/*">
+                        <small class="form-text text-muted d-block">Kosongkan jika tidak ingin mengganti file.</small>
                         <ul class="list-unstyled small mt-2 mb-0" id="preview_file_ktp">
                             <li class="text-muted fst-italic">Belum ada file dipilih</li>
                         </ul>
@@ -231,10 +230,11 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>2. Foto Debitur pada Saat Penandatanganan PK <small class="text-muted">(Posisi Berdiri Tampak Depan dan Tampak Samping)</small> <span class="text-danger">*</span></label>
+                        <label>2. Foto Debitur pada Saat Penandatanganan PK <small class="text-muted">(Posisi Berdiri Tampak Depan dan Tampak Samping)</small></label>
+                        <ul class="list-unstyled small mb-2" id="current_file_pk"></ul>
                         <input type="file" class="form-control form-control-sm" style="max-width:320px;"
-                            id="file_pk" name="file_pk[]" accept="image/*" multiple required>
-                        <small class="form-text text-muted d-block">Tekan CTRL untuk memilih beberapa file.</small>
+                            id="file_pk" name="file_pk[]" accept="image/*" multiple>
+                        <small class="form-text text-muted d-block">Kosongkan jika tidak ingin mengganti file. Tekan CTRL untuk memilih beberapa file.</small>
                         <ul class="list-unstyled small mt-2 mb-0" id="preview_file_pk">
                             <li class="text-muted fst-italic">Belum ada file dipilih</li>
                         </ul>
@@ -244,19 +244,20 @@
         </div>
     </div>
 
-    {{-- ══ PERHATIAN + AKSI ══ --}}
+    {{-- ══ CATATAN + AKSI ══ --}}
     <div class="card">
         <div class="card-body">
-            <div class="alert alert-warning mb-4">
-                <strong><i class="ti ti-info-circle"></i> Perhatian :</strong>
-                <p class="mb-1">Mohon dalam mengisi data debitur dan Keterangan Kesehatan harus sesuai dengan data yang sebenarnya,
-                   agar tidak terjadi kendala pada saat proses pengajuan klaim.</p>
-                <p class="mb-0">Apabila dalam 14 hari belum melengkapi data debitur, maka secara otomatis sistem
-                   akan terkunci — silakan hubungi PIC TuguBro.</p>
+            <div class="form-group">
+                <label>Catatan Perubahan</label>
+                <textarea class="form-control" id="note" name="note" rows="2"
+                          placeholder="Opsional — jelaskan perubahan yang dilakukan"></textarea>
             </div>
             <div class="d-flex justify-content-end gap-3 flex-wrap">
+                <a href="/client/penutupan/detail/{{ $id }}" class="btn btn-danger">
+                    <i class="ti ti-arrow-left"></i> Batal
+                </a>
                 <button type="submit" class="btn btn-success">
-                    <i class="ti ti-device-floppy"></i> Simpan Data
+                    <i class="ti ti-device-floppy"></i> Simpan Perubahan
                 </button>
             </div>
         </div>
@@ -268,6 +269,5 @@
 @endsection
 
 @push('levelPluginsJs')
-    <script src="{{ asset('assets/js/plugins/sweetalert2.all.min.js') }}"></script>
-    @vite(['resources/js/client/penutupan-input.js'])
+    @vite(['resources/js/client/penutupan-update.js'])
 @endpush
