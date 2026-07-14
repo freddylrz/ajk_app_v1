@@ -78,7 +78,6 @@
                               id="keterangan"
                               name="keterangan"
                               rows="5"
-                              placeholder="Contoh: Sakit, Meninggal Dunia"
                               required></textarea>
                 </div>
 
@@ -114,7 +113,7 @@
             </div>
 
             <p class="mt-3 text-muted small">
-                Catatan: dokumen yang sudah tersedia ditandai dengan tanda centang. Unggah dokumen yang belum ada sebelum submit ke SPV.
+                Catatan: dokumen bertanda (<span class="text-danger">*</span>) wajib diunggah sebelum data klaim dapat disimpan.
             </p>
         </div>
     </div>
@@ -123,7 +122,7 @@
         <div class="card-body">
             <div class="d-flex justify-content-end gap-3 flex-wrap">
                 <button type="submit" class="btn btn-success">
-                    <i class="ti ti-upload"></i> Unggah & Submit to SPV
+                    <i class="ti ti-upload"></i> Simpan Data Klaim
                 </button>
             </div>
         </div>
