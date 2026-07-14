@@ -19,10 +19,11 @@ Route::prefix('tib')->name('tib.')->group(function () {
     
     // ── Penutupan ─────────────────────────────────────────────
     Route::prefix('penutupan')->name('penutupan.')->group(function () {
-        Route::view('/list-data', 'tib.penutupan.list')
-            ->name('list-data');
+        Route::view('/list-data', 'client.penutupan.list-data');
+        Route::view('/terbit-polis', 'client.penutupan.terbit-polis')
+            ->name('terbit-polis');
         Route::get('/detail/{id}', function (string $id) {
-            return view('tib.penutupan.detail', ['id' => $id]);
+            return view('client.penutupan.detail', ['id' => $id]);
         })->name('detail');
     });
 

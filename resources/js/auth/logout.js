@@ -175,26 +175,6 @@ async function getUserInfo() {
         const path = window.location.pathname;
 
         $('.display_user').text(responses.data.user_info.display_name || 'User');
-        function isActive(urls) {
-            return urls.some(url => path.startsWith(url)) ? 'active' : '';
-        }
-
-        let menuHtml = '';
-
-        if (roles.includes('SA')) {
-            $('.menuTIB, .menuBPR').show();
-        }
-
-        if (roles.includes('OPR')) {
-            $('.menuBPR, .menuOPR').show();
-        }
-
-        if (roles.some(r => ['MKT', 'SPV'].includes(r))) {
-            $('.menuBPR').show();
-        }
-
-        // inject sekali aja (lebih efisien)
-        $('#pc-navbar-menu').append(menuHtml);
 
     });
 }
