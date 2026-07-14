@@ -105,7 +105,7 @@
                         </a>
                         <ul class="pc-submenu">
                             @if ($isClient)
-                                <li class="pc-item {{ Request::routeIs("$prefix/penutupan/input") ? 'active' : '' }}">
+                                <li id="menuInput" class="pc-item {{ Request::routeIs("$prefix/penutupan/input") ? 'active' : '' }}">
                                     <a class="pc-link" href="/{{ $prefix }}/penutupan/input-data">Input Data
                                     </a>
                                 </li>
