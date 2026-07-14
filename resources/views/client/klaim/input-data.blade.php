@@ -1,15 +1,12 @@
 @extends('layouts.app')
 
-@section('pageTitle', 'Form Pengajuan Klaim')
-
 @section('content')
 
 <div class="pct-body">
-<form id="form-laporan-awal">
+<form id="form-input-data">
     <div class="card">
         <div class="card-header">
-            <i class="ti ti-file-alert"></i>
-            <h3>Laporan Awal Klaim</h3>
+            <h3>Input Data Klaim</h3>
         </div>
         <div class="card-body">
             <div class="row">
@@ -50,26 +47,46 @@
                         <textarea class="form-control" id="keterangan" name="keterangan"
                                   placeholder="Contoh: Sakit, Meninggal Dunia" required></textarea>
                     </div>
-                    <div class="form-group">
-                        <label>Unggah Laporan Awal Klaim <span class="text-danger">*</span></label>
-                        <input type="file" class="form-control" name="file_laporan" accept="application/pdf" required>
-                        <small class="form-text text-muted d-block">Dokumen dalam bentuk PDF.</small>
-                        <a href="#!" class="fw-bold d-inline-block mt-2">
-                            <i class="ti ti-download"></i> Unduh Draft Surat Pelaporan Awal Klaim
-                        </a>
-                    </div>
                 </div>
             </div>
 
             <div class="text-end text-muted small mb-3">KETERANGAN : (<span class="text-danger">*</span>) WAJIB DIISI</div>
+        </div>
+    </div>
 
+    <div class="card">
+        <div class="card-header">
+            <h3>Dokumen Klaim</h3>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive dt-responsive">
+                <table class="table table-striped table-bordered nowrap" id="table-dokumen-klaim" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Nama Dokumen</th>
+                            <th>Dokumen</th>
+                            <th>Status</th>
+                            <th>Tanggal Upload</th>
+                            <th>Unggah</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <p class="mt-3 text-muted small">
+                Catatan: dokumen yang sudah tersedia ditandai dengan tanda centang. Unggah dokumen yang belum ada sebelum submit ke SPV.
+            </p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
             <div class="d-flex justify-content-end gap-3 flex-wrap">
                 <button type="submit" class="btn btn-success">
-                    <i class="ti ti-send"></i> Kirim Laporan
+                    <i class="ti ti-upload"></i> Unggah & Submit to SPV
                 </button>
-                <a href="{{ route('client.klaim.data') }}" class="btn btn-danger">
-                    <i class="ti ti-x"></i> Batal
-                </a>
             </div>
         </div>
     </div>
@@ -79,5 +96,5 @@
 @endsection
 
 @push('levelPluginsJs')
-    @vite(['resources/js/client/klaim-laporan-awal.js'])
+    @vite(['resources/js/client/klaim-input-data.js'])
 @endpush
