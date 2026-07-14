@@ -1,17 +1,12 @@
-/**
- * ============================================================
- * PAGE: Penutupan — Detail (Reguler Griya)
- * API  : GET  /api/v1/client/declaration/detail?id=...
- *        POST /api/v1/client/declaration/validation (khusus SPV, status=3)
- * ============================================================
- */
-
 import { ClientHelper } from './helpers.js';
 
 /* Status yang boleh diedit Operator (lihat diagram transisi status). */
 const OPR_EDITABLE_STATUS = [1, 2, 4];
 /* Status yang menunggu validasi SPV. */
 const SPV_VALIDATION_STATUS = 3;
+
+const TIB_VALIDATION_STATUS = 5;
+
 
 function statusBadgeType(statusId) {
     if (statusId === 7) return 'success';
@@ -20,13 +15,19 @@ function statusBadgeType(statusId) {
     return 'warning';
 }
 
+let firstPath = window.location.pathname
+    .split('/')
+    .filter(Boolean)[0];
+
 $(function () {
     const id = $('#detail-container').data('id');
-
+    if (firstPath == 'tib') {
+        firstPath = 'admin'
+    }
     async function load() {
         try {
             const [detailRes, roles] = await Promise.all([
-                ClientHelper.apiFetch(`/api/v1/client/declaration/detail?id=${encodeURIComponent(id)}`),
+                ClientHelper.apiFetch(`/api/v1/${firstPath}/declaration/detail?id=${encodeURIComponent(id)}`),
                 ClientHelper.getRoles()
             ]);
             const json = await detailRes.json();
@@ -43,11 +44,13 @@ $(function () {
         }
     }
 
+    let statusId
     function render(data, roles) {
         const d = data.declaration || {};
         const upload = data.upload || {};
         const logs = data.logs || [];
 
+        statusId = d.status_id
         $('#head-no-polis').text(d.policy_no || d.declaration_no || '-');
         $('#head-status').html(ClientHelper.statusBadge(d.status_name || '-', statusBadgeType(d.status_id)));
 
@@ -90,7 +93,7 @@ $(function () {
         }
 
         $('#d-files').html(files.map(f => `
-            <li><i class="ti ti-paperclip"></i> <a href="${f.file_path}" target="_blank" rel="noopener">${f.label}: ${f.file_name}</a></li>
+            <li><i class="ti ti-paperclip"></i> <a href="/${f.file_path}${f.file_name}" target="_blank" rel="noopener">${f.label}: ${f.file_name}</a></li>
         `).join(''));
     }
 
@@ -112,14 +115,19 @@ $(function () {
     function setupActions(d, roles) {
         const isOpr = roles.includes('OPR');
         const isSpv = roles.includes('SPV');
+        const isTib = roles.includes('SA') || roles.includes('TIB');
         const statusId = parseInt(d.status_id, 10);
 
         if (isOpr && OPR_EDITABLE_STATUS.includes(statusId)) {
             $('#btn-edit').attr('href', `/client/penutupan/update/${d.id}`).removeClass('d-none');
+            $('#area-validasi-opr').removeClass('d-none');
         }
 
         if (isSpv && statusId === SPV_VALIDATION_STATUS) {
             $('#area-validasi-spv').removeClass('d-none');
+        }
+        if (isTib && statusId === TIB_VALIDATION_STATUS) {
+            $('#area-validasi-tib').removeClass('d-none');
         }
     }
 
@@ -130,18 +138,28 @@ $(function () {
     }
 
     async function sendValidation(statusId, requireNote) {
-        const note = $('#catatan_validasi').val().trim();
+        let note = '';
 
         if (requireNote && !note) {
             ClientHelper.notify('Catatan wajib diisi jika data dikembalikan ke Operator.', 'warning');
             return;
         }
 
+        let textMes = ''
+        if (firstPath == 'client') {
+            note = $('#catatan_validasi').is(':hidden')
+                ? ($('#catatan_validasi_opr').val() || '').trim()
+                : ($('#catatan_validasi').val() || '').trim(); ''
+            textMes = statusId === 5
+                ? 'Setujui dan teruskan deklarasi ini ke TuguBro?'
+                : 'Kembalikan deklarasi ini ke Operator untuk direvisi?'
+        } else {
+            note = $('#catatan_validasi_tib').val().trim()
+            textMes = 'Setujui dan terbitkan polis?'
+        }
         const confirm = await Swal.fire({
             title: 'Konfirmasi',
-            text: statusId === 5
-                ? 'Setujui dan teruskan deklarasi ini ke TuguBro?'
-                : 'Kembalikan deklarasi ini ke Operator untuk direvisi?',
+            text: textMes,
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Ya, Lanjutkan',
@@ -151,7 +169,7 @@ $(function () {
         if (!confirm.isConfirmed) return;
 
         try {
-            const res = await ClientHelper.apiFetch('/api/v1/client/declaration/validation', {
+            const res = await ClientHelper.apiFetch(`/api/v1/${firstPath}/declaration/validation`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id, status_id: statusId, note: note || null })
@@ -171,8 +189,13 @@ $(function () {
         }
     }
 
+    $('#btn-setujui_opr').on('click', () => sendValidation(statusId == 1 ? 3 : 2, false));
+
     $('#btn-setujui').on('click', () => sendValidation(5, false));
     $('#btn-kembalikan').on('click', () => sendValidation(2, true));
+
+    $('#btn-setujui-tib').on('click', () => sendValidation(7, false));
+    $('#btn-kembalikan-tib').on('click', () => sendValidation(4, true));
 
     load();
 });

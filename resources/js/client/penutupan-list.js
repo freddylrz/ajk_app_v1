@@ -6,7 +6,13 @@
  */
 
 import { ClientHelper } from './helpers.js';
+let firstPath = window.location.pathname
+    .split('/')
+    .filter(Boolean)[0];
 
 $(function () {
-    ClientHelper.renderDeclarationTable('#table-penutupan', 1);
+    if(firstPath == 'tib'){
+        firstPath = 'admin'
+    }
+    ClientHelper.renderDeclarationTable('#table-penutupan', 1, firstPath);
 });

@@ -162,7 +162,7 @@ export const ClientHelper = {
      * Dipakai bersama oleh halaman "Dalam Proses" (type=1) dan "Terbit Polis" (type=2)
      * karena keduanya memakai endpoint & kolom respons yang sama, hanya beda filter type.
      */
-    renderDeclarationTable(tableSelector, type) {
+    renderDeclarationTable(tableSelector, type, user = 'client') {
         return $(tableSelector).DataTable({
             processing: true,
             serverSide: true,
@@ -179,7 +179,7 @@ export const ClientHelper = {
                 });
                 if (params.search?.value) query.set('keyword', params.search.value);
 
-                this.apiFetch(`/api/v1/client/declaration/list?${query.toString()}`)
+                this.apiFetch(`/api/v1/${user}/declaration/list?${query.toString()}`)
                     .then(res => res.json().then(json => ({ ok: res.ok, json })))
                     .then(({ ok, json }) => {
                         if (!ok) {
@@ -213,7 +213,7 @@ export const ClientHelper = {
                 {
                     data: 'status_name',
                     orderable: false,
-                    render: (data, t, row) => this.statusLink(data || '-', 'info', `/client/penutupan/detail/${row.id}`)
+                    render: (data, t, row) => this.statusLink(data || '-', 'info', `/${user == 'admin'? 'tib' : 'client'}/penutupan/detail/${row.id}`)
                 }
             ]
         });
