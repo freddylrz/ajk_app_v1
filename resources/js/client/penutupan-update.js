@@ -99,7 +99,8 @@ $(function () {
     function toggleCheckField(checkbox, input) {
         $(checkbox).on('change', function () {
             if (this.checked) {
-                $(input).val('').prop('readonly', false).trigger('focus');
+                const originalValue = $(input).data('original-value') || '';
+                $(input).val(originalValue).prop('readonly', false).trigger('focus');
             } else {
                 $(input).val('0').prop('readonly', true);
             }
@@ -188,6 +189,7 @@ $(function () {
         $('#pangkat_jabatan').val(d.position_name || '');
 
         const noRek = d.account_no || '0';
+        $('#no_rek').val(noRek).data('original-value', noRek);
         $('#no_rek').val(noRek);
         if (noRek !== '0' && noRek !== '') {
             $('#cek_no_rek').prop('checked', true);
@@ -195,6 +197,7 @@ $(function () {
         }
 
         const noPk = d.pk_no || '0';
+        $('#no_pk').val(noPk).data('original-value', noPk);
         $('#no_pk').val(noPk);
         if (noPk !== '0' && noPk !== '') {
             $('#cek_no_pk').prop('checked', true);
