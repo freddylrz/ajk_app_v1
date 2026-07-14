@@ -86,7 +86,9 @@ async function handleLogin(event) {
                     }
                 });
             }, 1000);
-
+            // setTimeout(() => {
+            //     window.location.href = redirectUrl || '/dashboard';
+            // }, 1000);
         } else {
             showAlert('warning', response.message);
         }
