@@ -175,6 +175,9 @@ async function getUserInfo() {
         const path = window.location.pathname;
 
         $('.display_user').text(responses.data.user_info.display_name || 'User');
+        if(roles.includes('SPV')){
+            $('#menuInput').hide();
+        }
 
     });
 }

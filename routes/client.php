@@ -25,7 +25,7 @@ Route::prefix('client')->name('client.')
     ->group(function () {
 
         // ── Dashboard ─────────────────────────────────────────────
-        Route::view('/dashboard', 'client.dashboard.index')
+        Route::view('/dashboard', 'home')
             ->name('dashboard');
 
         // ── Penutupan ─────────────────────────────────────────────
@@ -46,10 +46,8 @@ Route::prefix('client')->name('client.')
 
         // ── Klaim ─────────────────────────────────────────────────
         Route::prefix('klaim')->name('klaim.')->group(function () {
-            Route::view('/laporan-awal', 'client.klaim.laporan-awal')
-                ->name('laporan-awal');
-            Route::view('/formulir', 'client.klaim.formulir')
-                ->name('formulir');
+            Route::view('/input-data', 'client.klaim.input-data')
+                ->name('input-data');
             Route::view('/data', 'client.klaim.data-klaim')
                 ->name('data');
             Route::get('/detail/{id}', function (string $id) {

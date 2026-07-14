@@ -55,12 +55,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="text-end mt-3">
-                <a href="{{ route('client.klaim.data') }}" class="btn btn-danger">
-                    <i class="ti ti-arrow-left"></i> Kembali
-                </a>
-            </div>
         </div>
     </div>
 

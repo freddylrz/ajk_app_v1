@@ -135,6 +135,10 @@
                                 <small class="text-muted d-block">Dokumen Debitur</small>
                                 <ul class="list-unstyled mt-2 mb-0" id="d-files-debitur"></ul>
                             </div>
+                            <div class="mb-3">
+                                <small class="text-muted d-block">Dokumen Polis</small>
+                                <ul class="list-unstyled mt-2 mb-0" id="d-files-polis"></ul>
+                            </div>
                         </div>
                     </div>
 
@@ -202,7 +206,7 @@
             <div class="card">
                 <div class="card-header">
                     <i class="ti ti-timeline-event"></i>
-                    <h3>Log Status</h3>
+                    <h3>Riwayat Status</h3>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive dt-responsive">
