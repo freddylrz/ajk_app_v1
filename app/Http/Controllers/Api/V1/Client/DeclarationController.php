@@ -370,6 +370,9 @@ class DeclarationController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' => 'Declaration berhasil ditambahkan.',
+                'data' => [
+                    'declaration_id' => $declarationId,
+                ]
             ], 200);
 
         } catch (Throwable $exception) {
@@ -653,7 +656,10 @@ class DeclarationController extends Controller
 
             return response()->json([
                 'status' => 200,
-                'message' => 'Data declaration berhasil diperbarui.'
+                'message' => 'Data declaration berhasil diperbarui.',
+                'data' => [
+                    'declaration_id' => $input['id'],
+                ]
             ], 200);
 
         } catch (Throwable $exception) {
@@ -710,14 +716,14 @@ class DeclarationController extends Controller
 
         }
 
-        if ((int) $declaration->declaration_status_id != 3) {
+        // if ((int) $declaration->declaration_status_id != 3) {
 
-            return response()->json([
-                'status' => 422,
-                'message' => 'Declaration tidak dalam proses validasi SPV.'
-            ], 422);
+        //     return response()->json([
+        //         'status' => 422,
+        //         'message' => 'Declaration tidak dalam proses validasi SPV.'
+        //     ], 422);
 
-        }
+        // }
 
         DB::beginTransaction();
 
