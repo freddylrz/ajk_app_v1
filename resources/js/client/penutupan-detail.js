@@ -1,84 +1,178 @@
 /**
  * ============================================================
  * PAGE: Penutupan — Detail (Reguler Griya)
- * Sumber data : ClientData.penutupan (dicari berdasarkan id
- *               dari atribut data-id yang dikirim controller)
+ * API  : GET  /api/v1/client/declaration/detail?id=...
+ *        POST /api/v1/client/declaration/validation (khusus SPV, status=3)
  * ============================================================
  */
 
-import { ClientData } from './data/dummy-data.js';
 import { ClientHelper } from './helpers.js';
 
-$(function () {
-    const id = parseInt($('#detail-container').data('id'), 10);
-    const p = ClientData.penutupan.find(x => x.id === id);
-    const questions = ClientData.master.kesehatanQuestions;
+/* Status yang boleh diedit Operator (lihat diagram transisi status). */
+const OPR_EDITABLE_STATUS = [1, 2, 4];
+/* Status yang menunggu validasi SPV. */
+const SPV_VALIDATION_STATUS = 3;
 
-    if (!p) {
-        ClientHelper.notify('Data penutupan tidak ditemukan.', 'warning');
-        setTimeout(() => window.location.href = '/client/penutupan/list-data', 1500);
-        return;
+function statusBadgeType(statusId) {
+    if (statusId === 7) return 'success';
+    if (statusId === 99) return 'danger';
+    if (statusId === 3 || statusId === 5) return 'info';
+    return 'warning';
+}
+
+$(function () {
+    const id = $('#detail-container').data('id');
+
+    async function load() {
+        try {
+            const [detailRes, roles] = await Promise.all([
+                ClientHelper.apiFetch(`/api/v1/client/declaration/detail?id=${encodeURIComponent(id)}`),
+                ClientHelper.getRoles()
+            ]);
+            const json = await detailRes.json();
+
+            if (!detailRes.ok) {
+                ClientHelper.notify(json.message || 'Gagal memuat data deklarasi.', 'warning');
+                return;
+            }
+
+            render(json.data, roles);
+        } catch (err) {
+            console.error('Gagal memuat /declaration/detail:', err);
+            ClientHelper.notify('Tidak dapat terhubung ke server.', 'danger');
+        }
     }
 
-    /* ── Header ── */
-    $('#head-no-polis').text(p.noPolis);
-    $('#head-status').html(ClientHelper.statusBadge(p.status, p.statusType));
+    function render(data, roles) {
+        const d = data.declaration || {};
+        const upload = data.upload || {};
+        const logs = data.logs || [];
 
-    /* ── Data diri ── */
-    $('#d-kategori-debitur').text(p.kategoriDebitur);
-    $('#d-debitur').text(p.debitur);
-    $('#d-tanggal-lahir').text(p.tanggalLahir);
-    $('#d-umur').text(p.umur);
-    $('#d-no-ktp').text(p.noKtp);
-    $('#d-jenis-kelamin').text(p.jenisKelamin);
-    $('#d-no-hp').text(p.noHp);
-    $('#d-email').text(p.email || '-');
+        $('#head-no-polis').text(d.policy_no || d.declaration_no || '-');
+        $('#head-status').html(ClientHelper.statusBadge(d.status_name || '-', statusBadgeType(d.status_id)));
 
-    /* ── Instansi & pinjaman ── */
-    $('#d-instansi').text(p.namaInstansi);
-    $('#d-pangkat').text(p.pangkatJabatan);
-    $('#d-no-rek').text(p.noRek);
-    $('#d-no-pk').text(p.noPk);
-    $('#d-tenor').text(p.tenor + ' Bulan');
-    $('#d-input-date').text(p.inputDate);
-    $('#d-periode').text(p.periode);
+        $('#d-kategori-debitur').text(d.debtor_category_name || '-');
+        $('#d-debitur').text(d.insured_name || '-');
+        $('#d-tanggal-lahir').text(d.birth_date || '-');
+        $('#d-umur').text(d.birth_date ? ClientHelper.hitungUmur(toIsoDate(d.birth_date)) + ' Tahun' : '-');
+        $('#d-no-ktp').text(d.nik || '-');
+        $('#d-jenis-kelamin').text(d.gender_desc || '-');
+        $('#d-no-hp').text(d.phone_no || '-');
+        $('#d-email').text(d.email || '-');
 
-    /* ── Nilai & alamat ── */
-    $('#d-plafond').text(ClientHelper.formatIDR(p.plafondKredit));
-    $('#d-rate').text(p.ratePremi.toFixed(5) + ' %');
-    $('#d-premi').text(ClientHelper.formatIDR(p.nilaiPremi));
-    $('#d-alamat-ktp').text(p.alamatKtp);
-    $('#d-alamat-domisili').text(p.alamatDomisili);
+        $('#d-instansi').text(d.company_name || '-');
+        $('#d-pangkat').text(d.position_name || '-');
+        $('#d-no-rek').text(d.account_no || '-');
+        $('#d-no-pk').text(d.pk_no || '-');
+        $('#d-tenor').text(d.tenor ? d.tenor + ' Bulan' : '-');
+        $('#d-periode-awal').text(d.start_date || '-');
+        $('#d-periode-akhir').text(d.end_date || '-');
 
-    /* ── Dokumen ── */
-    $('#d-files').html(p.files.map(f => `
-        <li class="mb-2">
-            <a href="#!" class="fw-bold" style="font-size:15.5px;">
-                <i class="ti ti-file-download"></i> ${f}
-            </a>
-        </li>
-    `).join(''));
+        $('#d-plafond').text(d.plafond ? 'Rp ' + d.plafond : '-');
+        $('#d-rate').text(d.rate ? d.rate + ' ‰' : '-');
+        $('#d-premi').text(d.premium ? 'Rp ' + d.premium : '-');
+        $('#d-alamat-ktp').text(d.ktp_address || '-');
+        $('#d-alamat-domisili').text(d.domicile_address || '-');
 
-    /* ── Keterangan Kesehatan ── */
-    $('#d-kesehatan').html(p.kesehatan.map(k => {
-        const q = questions.find(item => item.no === k.no);
-        return `
+        renderFiles(upload);
+        renderLogs(logs);
+        setupActions(d, roles);
+    }
+
+    function renderFiles(upload) {
+        const files = [];
+        if (upload.ktp) files.push({ label: 'Foto KTP', ...upload.ktp });
+        (upload.debitur || []).forEach((f, i) => files.push({ label: `Foto Debitur ${i + 1}`, ...f }));
+
+        if (files.length === 0) {
+            $('#d-files').html('<li class="text-muted fst-italic">Belum ada file diunggah</li>');
+            return;
+        }
+
+        $('#d-files').html(files.map(f => `
+            <li><i class="ti ti-paperclip"></i> <a href="${f.file_path}" target="_blank" rel="noopener">${f.label}: ${f.file_name}</a></li>
+        `).join(''));
+    }
+
+    function renderLogs(logs) {
+        if (logs.length === 0) {
+            $('#d-log').html('<tr><td colspan="4" class="text-center text-muted fst-italic">Belum ada log status</td></tr>');
+            return;
+        }
+        $('#d-log').html(logs.map((l, i) => `
             <tr>
-                <td class="text-center fw-bold">${k.no}</td>
-                <td>${q ? q.pertanyaan : '-'}</td>
-                <td class="text-center fw-bold">${k.jawaban}</td>
-                <td>${k.keterangan}</td>
+                <td class="text-center">${i + 1}</td>
+                <td>${l.status_name || '-'}</td>
+                <td>${l.note || '-'}</td>
+                <td>${l.log_date || '-'}</td>
             </tr>
-        `;
-    }).join(''));
+        `).join(''));
+    }
 
-    /* ── Log status ── */
-    $('#d-log').html(p.logStatus.map(log => `
-        <tr>
-            <td>${log.no}</td>
-            <td>${ClientHelper.statusBadge(log.status, log.no === p.logStatus.length ? p.statusType : 'info')}</td>
-            <td>${log.keterangan}</td>
-            <td class="fw-bold">${log.tanggal}</td>
-        </tr>
-    `).join(''));
+    function setupActions(d, roles) {
+        const isOpr = roles.includes('OPR');
+        const isSpv = roles.includes('SPV');
+        const statusId = parseInt(d.status_id, 10);
+
+        if (isOpr && OPR_EDITABLE_STATUS.includes(statusId)) {
+            $('#btn-edit').attr('href', `/client/penutupan/update/${d.id}`).removeClass('d-none');
+        }
+
+        if (isSpv && statusId === SPV_VALIDATION_STATUS) {
+            $('#area-validasi-spv').removeClass('d-none');
+        }
+    }
+
+    function toIsoDate(val) {
+        if (!val) return '';
+        const [dd, mm, yyyy] = val.split('-');
+        return `${yyyy}-${mm}-${dd}`;
+    }
+
+    async function sendValidation(statusId, requireNote) {
+        const note = $('#catatan_validasi').val().trim();
+
+        if (requireNote && !note) {
+            ClientHelper.notify('Catatan wajib diisi jika data dikembalikan ke Operator.', 'warning');
+            return;
+        }
+
+        const confirm = await Swal.fire({
+            title: 'Konfirmasi',
+            text: statusId === 5
+                ? 'Setujui dan teruskan deklarasi ini ke TuguBro?'
+                : 'Kembalikan deklarasi ini ke Operator untuk direvisi?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Lanjutkan',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        });
+        if (!confirm.isConfirmed) return;
+
+        try {
+            const res = await ClientHelper.apiFetch('/api/v1/client/declaration/validation', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, status_id: statusId, note: note || null })
+            });
+            const json = await res.json();
+
+            if (!res.ok) {
+                ClientHelper.notify(json.message || 'Gagal memproses validasi.', 'warning');
+                return;
+            }
+
+            ClientHelper.notify(json.message || 'Berhasil diproses.');
+            setTimeout(() => window.location.reload(), 1200);
+        } catch (err) {
+            console.error('Gagal memanggil /declaration/validation:', err);
+            ClientHelper.notify('Tidak dapat terhubung ke server.', 'danger');
+        }
+    }
+
+    $('#btn-setujui').on('click', () => sendValidation(5, false));
+    $('#btn-kembalikan').on('click', () => sendValidation(2, true));
+
+    load();
 });

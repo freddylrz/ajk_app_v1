@@ -1,12 +1,12 @@
 /**
  * ============================================================
- * PAGE: Penutupan — Dalam Proses (type=1)
- * API  : GET /api/v1/client/declaration/list?type=1
+ * PAGE: Penutupan — Terbit Polis (type=2)
+ * API  : GET /api/v1/client/declaration/list?type=2
  * ============================================================
  */
 
 import { ClientHelper } from './helpers.js';
 
 $(function () {
-    ClientHelper.renderDeclarationTable('#table-penutupan', 1);
+    ClientHelper.renderDeclarationTable('#table-terbit-polis', 2);
 });

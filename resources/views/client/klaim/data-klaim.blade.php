@@ -1,21 +1,21 @@
 @extends('layouts.app')
 
 @section('pageTitle', 'Data Klaim')
-@section('pageIcon', 'ti ti-files')
 
 @section('content')
 
+<div class="pct-body">
 <div class="card">
     <div class="card-header">
         <i class="ti ti-table"></i>
-        <h5>Data Klaim — BNI Cabang KC KUNINGAN</h5>
-        <a href="{{ route('client.klaim.laporan-awal') }}" class="btn btn-warning btn-sm ms-auto">
-            <i class="ti ti-plus"></i> Lapor Klaim Baru
-        </a>
+        <h3>Data Klaim</h3>
     </div>
     <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-striped" id="table-klaim" style="width:100%">
+        <a href="{{ route('client.klaim.laporan-awal') }}" class="btn btn-primary btn-sm mb-3 float-end">
+            <i class="ti ti-plus"></i> Lapor Klaim Baru
+        </a>
+        <div class="table-responsive dt-responsive">
+            <table class="table table-striped table-bordered nowrap" id="table-klaim" style="width:100%">
                 <thead>
                     <tr>
                         <th>No.</th>
@@ -35,9 +35,10 @@
         </div>
     </div>
 </div>
+</div>
 
 @endsection
 
-@push('pageScripts')
+@push('levelPluginsJs')
     @vite(['resources/js/client/klaim-data.js'])
 @endpush
