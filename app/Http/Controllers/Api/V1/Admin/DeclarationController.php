@@ -239,6 +239,15 @@ class DeclarationController extends Controller
                 ->orderBy('created_at')
                 ->get();
 
+            $policy = DB::table('operational.tb_policy_upload')
+                ->select(
+                    'id',
+                    'file_name',
+                    'file_path'
+                )
+                ->where('declaration_id', $r->id)
+                ->first();
+
             $logs = DB::table('operational.tb_declaration_log as l')
                 ->leftJoin('operational.tb_declaration_status as s', 'l.declaration_status_id', '=', 's.id')
                 ->leftJoin('users as u', 'l.user_id_add', '=', 'u.id')
@@ -263,6 +272,7 @@ class DeclarationController extends Controller
                     'upload' => [
                         'ktp' => $ktp,
                         'debitur' => $debitur,
+                        'policy' => $policy,
                     ],
                     'logs' => $logs,
                 ]
@@ -373,13 +383,28 @@ class DeclarationController extends Controller
             ];
 
             if ((int) $input['status_id'] === 7) {
-                $update['policy_no'] = $this->generatePolicyNo();
+                $policyNo = $this->generatePolicyNo();
+                $update['policy_no'] = $policyNo;
+
+                $fileName = 'Sertifikat_Polis.pdf';
+                $filePath = 'document';
+
+                DB::table('operational.tb_policy_upload')->insert([
+                    'id' => Init::createId(),
+                    'declaration_id' => $declaration->id,
+                    'policy_no' => $policyNo,
+                    'file_name' => $fileName,
+                    'file_path' => $filePath,
+                    'user_id_add' => Auth::user()->id,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
             }
 
             DB::table('operational.tb_declaration')
                 ->where('id', $declaration->id)
                 ->update($update);
-                
+
             DB::commit();
 
             $message = match ((int) $input['status_id']) {
