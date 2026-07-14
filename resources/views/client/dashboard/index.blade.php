@@ -64,7 +64,7 @@
                 <h3>Akses Cepat</h3>
             </div>
             <div class="card-body d-grid gap-3">
-                <a href="{{ route('client.penutupan.input') }}" class="btn btn-primary btn-lg">
+                <a id="btn-input-data-debitur" href="{{ route('client.penutupan.input') }}" class="btn btn-primary btn-lg">
                     <i class="ti ti-file-plus"></i> Input Data Peserta Baru
                 </a>
                 <a href="{{ route('client.penutupan.list') }}" class="btn btn-info btn-lg">

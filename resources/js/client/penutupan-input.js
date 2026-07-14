@@ -1,6 +1,12 @@
 import { ClientHelper } from './helpers.js';
 
-$(function () {
+$(async function () {
+    const roles = await ClientHelper.getRoles();
+    if (roles.includes('SPV')) {
+        ClientHelper.notify('Akses input data tidak tersedia untuk SPV.', 'warning');
+        setTimeout(() => window.location.href = '/client/dashboard', 1000);
+        return;
+    }
 
     async function loadAsset() {
         try {
