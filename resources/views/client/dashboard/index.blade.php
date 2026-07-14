@@ -64,14 +64,14 @@
                 <h3>Akses Cepat</h3>
             </div>
             <div class="card-body d-grid gap-3">
-                <a href="{{ route('client.penutupan.input') }}" class="btn btn-primary btn-lg">
+                <a id="btn-input-data-debitur" href="{{ route('client.penutupan.input') }}" class="btn btn-primary btn-lg">
                     <i class="ti ti-file-plus"></i> Input Data Peserta Baru
                 </a>
                 <a href="{{ route('client.penutupan.list') }}" class="btn btn-info btn-lg">
                     <i class="ti ti-list-details"></i> Lihat List Data Penutupan
                 </a>
-                <a href="{{ route('client.klaim.laporan-awal') }}" class="btn btn-warning btn-lg">
-                    <i class="ti ti-alert-circle"></i> Lapor Klaim Baru
+                <a href="{{ route('client.klaim.input-data') }}" class="btn btn-warning btn-lg">
+                    <i class="ti ti-alert-circle"></i> Input Data Klaim
                 </a>
                 <a href="{{ route('client.klaim.data') }}" class="btn btn-outline-secondary btn-lg">
                     <i class="ti ti-files"></i> Lihat Data Klaim

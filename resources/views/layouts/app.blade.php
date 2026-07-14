@@ -105,7 +105,7 @@
                         </a>
                         <ul class="pc-submenu">
                             @if ($isClient)
-                                <li id="menuInput" class="pc-item {{ Request::routeIs("$prefix/penutupan/input") ? 'active' : '' }}">
+                                <li id="menu-client-input-data" class="pc-item {{ Request::routeIs("$prefix/penutupan/input") ? 'active' : '' }}">
                                     <a class="pc-link" href="/{{ $prefix }}/penutupan/input-data">Input Data
                                     </a>
                                 </li>
@@ -130,8 +130,14 @@
                             <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
                         </a>
                         <ul class="pc-submenu">
-                            <li class="pc-item {{ Request::is("$prefix/klaim/list") ? 'active' : '' }}">
-                                <a class="pc-link" href="/{{ $prefix }}/klaim/rekap">List Data</a>
+                            @if ($isClient)
+                                <li class="pc-item {{ Request::routeIs("$prefix/klaim/input-data") ? 'active' : '' }}">
+                                    <a class="pc-link" href="/{{ $prefix }}/klaim/input-data">Input Data
+                                    </a>
+                                </li>
+                            @endif
+                            <li class="pc-item {{ Request::is("$prefix/klaim/data") ? 'active' : '' }}">
+                                <a class="pc-link" href="/{{ $prefix }}/klaim/data">List Data</a>
                             </li>
                             <li class="pc-item {{ Request::is("$prefix/klaim/rekap") ? 'active' : '' }}">
                                 <a class="pc-link" href="/{{ $prefix }}/klaim/rekap">Rekap</a>
@@ -234,7 +240,7 @@
     <script src="{{ asset('assets/js/plugins/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/sweetalert2.all.min.js') }}"></script>
 
-    @vite(['resources/js/auth/logout.js'])
+    @vite(['resources/js/auth/logout.js', 'resources/js/client/role-guard.js'])
 
     <script>
         window.__cookieDomain = @json(config('setup.domain') ?: null);
