@@ -25,7 +25,7 @@ Route::prefix('client')->name('client.')
     ->group(function () {
 
         // ── Dashboard ─────────────────────────────────────────────
-        Route::view('/dashboard', 'client.dashboard.index')
+        Route::view('/dashboard', 'home')
             ->name('dashboard');
 
         // ── Penutupan ─────────────────────────────────────────────
