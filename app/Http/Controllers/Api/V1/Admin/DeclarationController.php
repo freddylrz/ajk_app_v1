@@ -89,15 +89,18 @@ class DeclarationController extends Controller
 
             }
 
+            $keyword = strtoupper(trim($r->keyword ?? ''));
+
             if (!empty($keyword)) {
 
                 $query->where(function ($q) use ($keyword) {
 
                     $q->whereRaw('UPPER(d.declaration_no) LIKE ?', ["%{$keyword}%"])
-                        ->orWhereRaw('UPPER(d.policy_no) LIKE ?', ["%{$keyword}%"])
+                        ->orWhereRaw('UPPER(COALESCE(d.policy_no, \'\')) LIKE ?', ["%{$keyword}%"])
                         ->orWhereRaw('UPPER(d.insured_name) LIKE ?', ["%{$keyword}%"])
+                        ->orWhereRaw('UPPER(d.account_no) LIKE ?', ["%{$keyword}%"])
+                        ->orWhereRaw('UPPER(d.pk_no) LIKE ?', ["%{$keyword}%"])
                         ->orWhereRaw('UPPER(d.nik) LIKE ?', ["%{$keyword}%"]);
-
                 });
 
             }
@@ -277,6 +280,25 @@ class DeclarationController extends Controller
         }
     }
 
+    private function generatePolicyNo(): string
+    {
+        do {
+
+            $policyNo = sprintf(
+                'PL-%s-%06d',
+                now()->format('Ym'),
+                random_int(1, 999999)
+            );
+
+        } while (
+            DB::table('operational.tb_declaration')
+                ->where('policy_no', $policyNo)
+                ->exists()
+        );
+
+        return $policyNo;
+    }
+
     public function validation(Request $r)
     {
         $input = $r->all();
@@ -344,14 +366,20 @@ class DeclarationController extends Controller
                 'updated_at' => now(),
             ]);
 
+            $update = [
+                'declaration_log_id' => $logId,
+                'user_id_update' => Auth::user()->id,
+                'updated_at' => now(),
+            ];
+
+            if ((int) $input['status_id'] === 7) {
+                $update['policy_no'] = $this->generatePolicyNo();
+            }
+
             DB::table('operational.tb_declaration')
                 ->where('id', $declaration->id)
-                ->update([
-                    'declaration_log_id' => $logId,
-                    'user_id_update' => Auth::user()->id,
-                    'updated_at' => now(),
-                ]);
-
+                ->update($update);
+                
             DB::commit();
 
             $message = match ((int) $input['status_id']) {

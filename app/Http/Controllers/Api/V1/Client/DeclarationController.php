@@ -19,8 +19,8 @@ class DeclarationController extends Controller
     public function list(Request $r)
     {
         $validator = Validator::make($r->all(), [
+            'type' => 'required|integer|in:1,2',
             'keyword' => 'nullable|string|max:100',
-            'status_id' => 'nullable|integer',
             'page' => 'nullable|integer|min:1',
             'limit' => 'nullable|integer|min:1|max:100',
         ]);
@@ -89,22 +89,19 @@ class DeclarationController extends Controller
 
             }
 
+            $keyword = strtoupper(trim($r->keyword ?? ''));
+
             if (!empty($keyword)) {
 
                 $query->where(function ($q) use ($keyword) {
 
                     $q->whereRaw('UPPER(d.declaration_no) LIKE ?', ["%{$keyword}%"])
-                        ->orWhereRaw('UPPER(d.policy_no) LIKE ?', ["%{$keyword}%"])
+                        ->orWhereRaw('UPPER(COALESCE(d.policy_no, \'\')) LIKE ?', ["%{$keyword}%"])
                         ->orWhereRaw('UPPER(d.insured_name) LIKE ?', ["%{$keyword}%"])
+                        ->orWhereRaw('UPPER(d.account_no) LIKE ?', ["%{$keyword}%"])
+                        ->orWhereRaw('UPPER(d.pk_no) LIKE ?', ["%{$keyword}%"])
                         ->orWhereRaw('UPPER(d.nik) LIKE ?', ["%{$keyword}%"]);
-
                 });
-
-            }
-
-            if (!empty($r->status_id)) {
-
-                $query->where('l.declaration_status_id', $r->status_id);
 
             }
 
@@ -321,12 +318,6 @@ class DeclarationController extends Controller
                 DB::table('operational.tb_upload')->insert($uploads);
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | Upload Debitur
-            |--------------------------------------------------------------------------
-            */
-
             if (!empty($input['debtor_file'])) {
 
                 foreach ($input['debtor_file'] as $file) {
@@ -354,12 +345,6 @@ class DeclarationController extends Controller
                 }
 
             }
-
-            /*
-            |--------------------------------------------------------------------------
-            | Declaration Log
-            |--------------------------------------------------------------------------
-            */
 
             $logId = Init::createId();
 
@@ -549,12 +534,6 @@ class DeclarationController extends Controller
                 return $fileName;
             };
 
-            /*
-            |--------------------------------------------------------------------------
-            | Update Upload KTP
-            |--------------------------------------------------------------------------
-            */
-
             if (!empty($input['ktp_file'])) {
 
                 DB::table('operational.tb_upload')
@@ -588,12 +567,6 @@ class DeclarationController extends Controller
                 }
 
             }
-
-            /*
-            |--------------------------------------------------------------------------
-            | Update Upload Debitur
-            |--------------------------------------------------------------------------
-            */
 
             if (!empty($input['debtor_file'])) {
 
@@ -634,12 +607,6 @@ class DeclarationController extends Controller
                 }
 
             }
-
-            /*
-            |--------------------------------------------------------------------------
-            | Update Status
-            |--------------------------------------------------------------------------
-            */
 
             if (
                 !DB::table('operational.tb_declaration_status')
