@@ -113,8 +113,8 @@
                             <li class="pc-item {{ Request::is("$prefix/penutupan/list-data") ? 'active' : '' }}">
                                 <a class="pc-link" href="/{{ $prefix }}/penutupan/list-data">Dalam Proses</a>
                             </li>
-                            <li class="pc-item {{ Request::is("$prefix/penutupan/terbit-polis") ? 'active' : '' }}">
-                                <a class="pc-link" href="/{{ $prefix }}/penutupan/terbit-polis">Terbit
+                            <li class="pc-item {{ Request::is("$prefix/penutupan/data-validation") ? 'active' : '' }}">
+                                <a class="pc-link" href="/{{ $prefix }}/penutupan/data-validation">Terbit
                                     Polis</a>
                             </li>
                             <li class="pc-item {{ Request::is("$prefix/penutupan/rekap") ? 'active' : '' }}">

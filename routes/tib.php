@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('tib')->name('tib.')->group(function () {
 
     // ── Dashboard ─────────────────────────────────────────────
-    Route::view('/dashboard', 'tib.home')
+    Route::view('/dashboard', 'home')
         ->name('dashboard');
 
     // ── Utilities ─────────────────────────────────────────────
