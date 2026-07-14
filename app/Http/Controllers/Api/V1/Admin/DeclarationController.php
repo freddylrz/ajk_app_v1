@@ -373,13 +373,28 @@ class DeclarationController extends Controller
             ];
 
             if ((int) $input['status_id'] === 7) {
-                $update['policy_no'] = $this->generatePolicyNo();
+                $policyNo = $this->generatePolicyNo();
+                $update['policy_no'] = $policyNo;
+
+                $fileName = 'Sertifikat_Polis.pdf';
+                $filePath = 'document';
+
+                DB::table('operational.tb_policy_upload')->insert([
+                    'id' => Init::createId(),
+                    'declaration_id' => $declaration->id,
+                    'policy_no' => $policyNo,
+                    'file_name' => $fileName,
+                    'file_path' => $filePath,
+                    'user_id_add' => Auth::user()->id,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
             }
 
             DB::table('operational.tb_declaration')
                 ->where('id', $declaration->id)
                 ->update($update);
-                
+
             DB::commit();
 
             $message = match ((int) $input['status_id']) {
