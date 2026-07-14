@@ -87,7 +87,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'status' => 200,
-                'message' => 'Login berhasils',
+                'message' => 'Login berhasil',
                 'data' => [
                     'accessToken' => CryptManual::encryption($accessTokenRes),
                     'refreshToken' => CryptManual::encryption($refreshTokenRes)
