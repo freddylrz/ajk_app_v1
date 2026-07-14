@@ -1,19 +1,7 @@
-/**
- * ============================================================
- * PAGE: Penutupan — Input Data (Form Deklarasi Reguler Griya)
- * API  : GET  /api/v1/client/declaration/asset               → opsi Kategori Debitur & Jenis Kelamin
- *        POST /api/v1/client/declaration/premium-calculation → hitung premi
- *        POST /api/v1/client/declaration/insert               → simpan deklarasi baru
- * ============================================================
- */
-
 import { ClientHelper } from './helpers.js';
 
 $(function () {
 
-    /* ── Muat opsi Kategori Debitur & Jenis Kelamin dari API ──
-       Jika API gagal/belum siap, dropdown dibiarkan kosong
-       (tidak diisi data bikinan). */
     async function loadAsset() {
         try {
             const res = await ClientHelper.apiFetch('/api/v1/client/declaration/asset');
