@@ -70,8 +70,8 @@
                 <a href="{{ route('client.penutupan.list') }}" class="btn btn-info btn-lg">
                     <i class="ti ti-list-details"></i> Lihat List Data Penutupan
                 </a>
-                <a href="{{ route('client.klaim.laporan-awal') }}" class="btn btn-warning btn-lg">
-                    <i class="ti ti-alert-circle"></i> Lapor Klaim Baru
+                <a href="{{ route('client.klaim.input-data') }}" class="btn btn-warning btn-lg">
+                    <i class="ti ti-alert-circle"></i> Input Data Klaim
                 </a>
                 <a href="{{ route('client.klaim.data') }}" class="btn btn-outline-secondary btn-lg">
                     <i class="ti ti-files"></i> Lihat Data Klaim

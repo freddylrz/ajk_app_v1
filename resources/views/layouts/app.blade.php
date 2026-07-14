@@ -131,8 +131,8 @@
                         </a>
                         <ul class="pc-submenu">
                             @if ($isClient)
-                                <li class="pc-item {{ Request::routeIs("$prefix/klaim/laporan-awal") ? 'active' : '' }}">
-                                    <a class="pc-link" href="/{{ $prefix }}/klaim/laporan-awal">Laporan Awal
+                                <li class="pc-item {{ Request::routeIs("$prefix/klaim/input-data") ? 'active' : '' }}">
+                                    <a class="pc-link" href="/{{ $prefix }}/klaim/input-data">Input Data
                                     </a>
                                 </li>
                             @endif
