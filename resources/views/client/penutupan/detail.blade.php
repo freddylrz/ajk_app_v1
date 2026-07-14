@@ -8,9 +8,23 @@
 
     <div class="card">
         <div class="card-header">
-            <h3>No. Deklarasi : <span id="head-no-polis">-</span></h3>
-            <h3>No. Polis : <span id="head-no-polis-2">-</span></h3>
-            <span class="ms-auto" id="head-status"></span>
+            <div class="row align-items-center">
+                <div class="col-12 text-center mb-2">
+                    <h3 class="mb-0">
+                        <span id="head-no-polis">-</span>
+                    </h3>
+                </div>
+
+                <div class="col-6">
+                    <h5 class="mb-0">
+                        No. Polis : <span id="head-no-polis-2">-</span>
+                    </h5>
+                </div>
+
+                <div class="col-6 text-end">
+                    <span id="head-status"></span>
+                </div>
+            </div>
         </div>
         <div class="card-body">
             <div class="row">
