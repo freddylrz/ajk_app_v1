@@ -42,6 +42,24 @@ Class Init
             ->toArray();
     }
 
+    public static function generateClaimNo()
+    {
+        $prefix = 'CLM' . now()->format('ym');
+
+        $lastNo = DB::table('operational.tb_claim')
+            ->where('claim_no', 'like', $prefix . '%')
+            ->orderByDesc('claim_no')
+            ->value('claim_no');
+
+        if (empty($lastNo)) {
+            $running = 1;
+        } else {
+            $running = (int) substr($lastNo, -5) + 1;
+        }
+
+        return $prefix . str_pad($running, 5, '0', STR_PAD_LEFT);
+    }
+
     public static function decodeFile($data)
     {
         try {
