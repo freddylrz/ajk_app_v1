@@ -19,8 +19,8 @@ class DeclarationController extends Controller
     public function list(Request $r)
     {
         $validator = Validator::make($r->all(), [
+            'type' => 'required|integer|in:1,2',
             'keyword' => 'nullable|string|max:100',
-            'status_id' => 'nullable|integer',
             'page' => 'nullable|integer|min:1',
             'limit' => 'nullable|integer|min:1|max:100',
         ]);
@@ -89,22 +89,19 @@ class DeclarationController extends Controller
 
             }
 
+            $keyword = strtoupper(trim($r->keyword ?? ''));
+
             if (!empty($keyword)) {
 
                 $query->where(function ($q) use ($keyword) {
 
                     $q->whereRaw('UPPER(d.declaration_no) LIKE ?', ["%{$keyword}%"])
-                        ->orWhereRaw('UPPER(d.policy_no) LIKE ?', ["%{$keyword}%"])
+                        ->orWhereRaw('UPPER(COALESCE(d.policy_no, \'\')) LIKE ?', ["%{$keyword}%"])
                         ->orWhereRaw('UPPER(d.insured_name) LIKE ?', ["%{$keyword}%"])
+                        ->orWhereRaw('UPPER(d.account_no) LIKE ?', ["%{$keyword}%"])
+                        ->orWhereRaw('UPPER(d.pk_no) LIKE ?', ["%{$keyword}%"])
                         ->orWhereRaw('UPPER(d.nik) LIKE ?', ["%{$keyword}%"]);
-
                 });
-
-            }
-
-            if (!empty($r->status_id)) {
-
-                $query->where('l.declaration_status_id', $r->status_id);
 
             }
 
@@ -373,6 +370,9 @@ class DeclarationController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' => 'Declaration berhasil ditambahkan.',
+                'data' => [
+                    'declaration_id' => $declarationId,
+                ]
             ], 200);
 
         } catch (Throwable $exception) {
@@ -656,7 +656,10 @@ class DeclarationController extends Controller
 
             return response()->json([
                 'status' => 200,
-                'message' => 'Data declaration berhasil diperbarui.'
+                'message' => 'Data declaration berhasil diperbarui.',
+                'data' => [
+                    'declaration_id' => $input['id'],
+                ]
             ], 200);
 
         } catch (Throwable $exception) {
@@ -713,14 +716,14 @@ class DeclarationController extends Controller
 
         }
 
-        if ((int) $declaration->declaration_status_id != 3) {
+        // if ((int) $declaration->declaration_status_id != 3) {
 
-            return response()->json([
-                'status' => 422,
-                'message' => 'Declaration tidak dalam proses validasi SPV.'
-            ], 422);
+        //     return response()->json([
+        //         'status' => 422,
+        //         'message' => 'Declaration tidak dalam proses validasi SPV.'
+        //     ], 422);
 
-        }
+        // }
 
         DB::beginTransaction();
 

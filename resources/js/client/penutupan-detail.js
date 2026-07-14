@@ -83,18 +83,39 @@ $(function () {
     }
 
     function renderFiles(upload) {
-        const files = [];
-        if (upload.ktp) files.push({ label: 'Foto KTP', ...upload.ktp });
-        (upload.debitur || []).forEach((f, i) => files.push({ label: `Foto Debitur ${i + 1}`, ...f }));
-
-        if (files.length === 0) {
-            $('#d-files').html('<li class="text-muted fst-italic">Belum ada file diunggah</li>');
-            return;
+        // Render KTP
+        if (upload.ktp) {
+            $('#d-files-ktp').html(`
+                <li>
+                    <i class="ti ti-paperclip"></i>
+                    <a href="/${upload.ktp.file_path}${upload.ktp.file_name}" target="_blank" rel="noopener">
+                        ${upload.ktp.file_name}
+                    </a>
+                </li>
+            `);
+        } else {
+            $('#d-files-ktp').html(
+                '<li class="text-muted fst-italic">Belum ada file KTP diunggah</li>'
+            );
         }
 
-        $('#d-files').html(files.map(f => `
-            <li><i class="ti ti-paperclip"></i> <a href="/${f.file_path}${f.file_name}" target="_blank" rel="noopener">${f.label}: ${f.file_name}</a></li>
-        `).join(''));
+        // Render Debitur
+        if (upload.debitur && upload.debitur.length > 0) {
+            $('#d-files-debitur').html(
+                upload.debitur.map((f, i) => `
+                    <li>
+                        <i class="ti ti-paperclip"></i>
+                        <a href="/${f.file_path}${f.file_name}" target="_blank" rel="noopener">
+                            ${f.file_name}
+                        </a>
+                    </li>
+                `).join('')
+            );
+        } else {
+            $('#d-files-debitur').html(
+                '<li class="text-muted fst-italic">Belum ada file Debitur diunggah</li>'
+            );
+        }
     }
 
     function renderLogs(logs) {

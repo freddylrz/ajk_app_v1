@@ -199,7 +199,7 @@ $(function () {
             }
 
             ClientHelper.notify(json.message || 'Data berhasil disimpan.');
-            setTimeout(() => window.location.href = '/client/penutupan/list-data', 1200);
+            setTimeout(() => window.location.href = '/client/penutupan/detail/' + json.data.declaration_id, 1200);
         } catch (err) {
             console.error('Gagal mengirim /declaration/insert:', err);
             ClientHelper.notify('Tidak dapat terhubung ke server. Silakan coba lagi.', 'danger');
