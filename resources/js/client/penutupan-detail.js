@@ -51,7 +51,8 @@ $(function () {
         const logs = data.logs || [];
 
         statusId = d.status_id
-        $('#head-no-polis').text(d.policy_no || d.declaration_no || '-');
+        $('#head-no-polis').text(d.declaration_no);
+        $('#head-no-polis-2').text(d.policy_no || "-");
         $('#head-status').html(ClientHelper.statusBadge(d.status_name || '-', statusBadgeType(d.status_id)));
 
         $('#d-kategori-debitur').text(d.debtor_category_name || '-');
@@ -71,9 +72,9 @@ $(function () {
         $('#d-periode-awal').text(d.start_date || '-');
         $('#d-periode-akhir').text(d.end_date || '-');
 
-        $('#d-plafond').text(d.plafond ? 'Rp ' + d.plafond : '-');
+        $('#d-plafond').text(d.plafond ? d.plafond : '-');
         $('#d-rate').text(d.rate ? d.rate + ' ‰' : '-');
-        $('#d-premi').text(d.premium ? 'Rp ' + d.premium : '-');
+        $('#d-premi').text(d.premium ? d.premium : '-');
         $('#d-alamat-ktp').text(d.ktp_address || '-');
         $('#d-alamat-domisili').text(d.domicile_address || '-');
 
@@ -95,7 +96,7 @@ $(function () {
             `);
         } else {
             $('#d-files-ktp').html(
-                '<li class="text-muted fst-italic">Belum ada file KTP diunggah</li>'
+                '<li class="text-muted fst-italic">Belum ada dokumen KTP diunggah</li>'
             );
         }
 
@@ -113,7 +114,23 @@ $(function () {
             );
         } else {
             $('#d-files-debitur').html(
-                '<li class="text-muted fst-italic">Belum ada file Debitur diunggah</li>'
+                '<li class="text-muted fst-italic">Belum ada dokumen Debitur diunggah</li>'
+            );
+        }
+
+        // Render Polis
+        if (upload.policy) {
+            $('#d-files-polis').html(`
+                <li>
+                    <i class="ti ti-paperclip"></i>
+                    <a href="/${upload.policy.file_path}${upload.policy.file_name}" target="_blank" rel="noopener">
+                        ${upload.policy.file_name}
+                    </a>
+                </li>
+            `);
+        } else {
+            $('#d-files-polis').html(
+                '<li class="text-muted fst-italic">Belum ada dokumen Polis</li>'
             );
         }
     }
@@ -161,11 +178,6 @@ $(function () {
     async function sendValidation(statusId, requireNote) {
         let note = '';
 
-        if (requireNote && !note) {
-            ClientHelper.notify('Catatan wajib diisi jika data dikembalikan ke Operator.', 'warning');
-            return;
-        }
-
         let textMes = ''
         if (firstPath == 'client') {
             note = $('#catatan_validasi').is(':hidden')
@@ -177,6 +189,11 @@ $(function () {
         } else {
             note = $('#catatan_validasi_tib').val().trim()
             textMes = 'Setujui dan terbitkan polis?'
+        }
+
+        if (requireNote && !note) {
+            ClientHelper.notify('Catatan wajib diisi jika data dikembalikan ke Operator.', 'warning');
+            return;
         }
         const confirm = await Swal.fire({
             title: 'Konfirmasi',
