@@ -1,48 +1,22 @@
+/**
+ * ============================================================
+ * PAGE: Klaim — Input Data
+ * API  : GET  /api/v1/client/claim/asset  → daftar debitur (polis terbit,
+ *              belum pernah klaim) & daftar dokumen klaim yang dibutuhkan
+ *        POST /api/v1/client/claim/insert → simpan klaim baru
+ * ============================================================
+ */
+
 import { ClientHelper } from './helpers.js';
 
-const apiResponse = {
-    status: 200,
-    message: 'Success.',
-    data: {
-        debtor: [
-            {
-                declaration_id: '2607141245365680471028',
-                policy_no: 'PL-202607-587581',
-                insured_name: 'Lorenzo'
-            }
-        ],
-        document: [
-            { id: 1, document_name: 'Surat Permohonan Klaim', is_required: true },
-            { id: 2, document_name: 'Fotocopy Identitas', is_required: true },
-            { id: 3, document_name: 'Copy Perjanjian Kredit', is_required: true },
-            { id: 4, document_name: 'Copy Rekening Koran', is_required: true },
-            { id: 5, document_name: 'Loan Inquiry', is_required: true },
-            { id: 6, document_name: 'Copy Nilai Pinjaman Pelunasan', is_required: true },
-            { id: 7, document_name: 'Jadwal Angsuran', is_required: true },
-            { id: 8, document_name: 'Surat Keterangan Kematian', is_required: true },
-            { id: 9, document_name: 'Surat Keterangan Kepolisian', is_required: true },
-            { id: 10, document_name: 'Kronologis Kematian Ahli Waris', is_required: true },
-            { id: 11, document_name: 'Surat Keterangan Rumah Sakit', is_required: true }
-        ]
-    }
-};
+let dokumenKlaim = [];
 
-const dokumenKlaim = apiResponse.data.document.map(item => ({
-    id: item.id,
-    document_name: item.document_name,
-    is_required: item.is_required,
-    uploaded: false,
-    fileName: null,
-    link: '#',
-    date: null
-}));
-
-function populateDebtorSelect() {
+function populateDebtorSelect(debtor) {
     const select = $('#peserta');
     select.empty().append('<option value="">-- Pilih Nama Peserta Asuransi --</option>');
 
-    apiResponse.data.debtor.forEach(debtor => {
-        select.append(`<option value="${debtor.declaration_id}">${debtor.insured_name} (${debtor.policy_no})</option>`);
+    debtor.forEach(item => {
+        select.append(`<option value="${item.declaration_id}">${item.insured_name} (${item.policy_no})</option>`);
     });
 }
 
@@ -54,10 +28,10 @@ function renderDokumenTable() {
         const row = $(
             `<tr>
                 <td>${index + 1}</td>
-                <td>${item.label}</td>
-                <td class="doc-file">${item.fileName ? `<a href="${item.link}" class="text-decoration-none">${item.fileName}</a>` : '-'}</td>
-                <td class="doc-status text-center">${item.uploaded ? '<i class="ti ti-check text-success"></i>' : '-'}</td>
-                <td class="doc-date text-center">${item.date || '-'}</td>
+                <td>${item.document_name}${item.is_required ? ' <span class="text-danger">*</span>' : ''}</td>
+                <td class="doc-file">-</td>
+                <td class="doc-status text-center">-</td>
+                <td class="doc-date text-center">-</td>
                 <td class="doc-upload">
                     <input type="file" class="form-control form-control-sm document-upload" data-index="${index}" accept="application/pdf,image/*" />
                 </td>
@@ -77,12 +51,42 @@ function formatDateTime(date) {
     return `${dd}/${mm}/${yyyy} ${hh}:${min}`;
 }
 
+function toIsoDate(val) {
+    if (!val) return '';
+    const [d, m, y] = val.split('-');
+    return `${y}-${m}-${d}`;
+}
+
+async function loadAsset() {
+    try {
+        const res = await ClientHelper.apiFetch('/api/v1/client/claim/asset');
+        const json = await res.json();
+
+        if (!res.ok) {
+            ClientHelper.notify(json.message || 'Gagal memuat data referensi form.', 'warning');
+            return;
+        }
+
+        populateDebtorSelect(json.data?.debtor || []);
+        dokumenKlaim = (json.data?.document || []).map(item => ({
+            id: item.id,
+            document_name: item.document_name,
+            is_required: item.is_required,
+            file: null
+        }));
+        renderDokumenTable();
+    } catch (err) {
+        console.error('Gagal memuat /claim/asset:', err);
+        ClientHelper.notify('Tidak dapat terhubung ke server untuk memuat data referensi form.', 'danger');
+    } finally {
+        $('#peserta').select2({ theme: 'bootstrap-5', width: '100%' });
+    }
+}
+
 $(function () {
     const bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
     const now = new Date();
     $('#tanggal_lapor').text(`${now.getDate()} ${bulan[now.getMonth()]} ${now.getFullYear()}`);
-
-    $('#peserta').select2({ theme: 'bootstrap-5', width: '100%' });
 
     document.querySelectorAll('.datepicker').forEach(el => {
         new Datepicker(el, { format: 'dd-mm-yyyy', autohide: true });
@@ -93,31 +97,78 @@ $(function () {
         this.value = angka ? ClientHelper.formatNumber(parseInt(angka, 10)) : '';
     });
 
-    populateDebtorSelect();
-    renderDokumenTable();
+    loadAsset();
 
     $(document).on('change', '.document-upload', function () {
         const index = parseInt($(this).data('index'), 10);
-        const fileName = this.files?.[0]?.name || null;
+        const file = this.files?.[0] || null;
+        const row = dokumenKlaim[index];
+        if (!row) return;
 
-        if (Number.isInteger(index)) {
-            const row = dokumenKlaim[index];
-            if (!row) return;
+        row.file = file;
 
-            row.uploaded = !!fileName;
-            row.fileName = fileName || row.fileName || null;
-            row.link = '#';
-            row.date = fileName ? formatDateTime(new Date()) : null;
-
-            const tr = $(this).closest('tr');
-            tr.find('.doc-status').html(row.uploaded ? '<i class="ti ti-check text-success"></i>' : '-');
-            tr.find('.doc-date').text(row.date || '-');
-            tr.find('.doc-file').html(row.fileName ? `<span>${row.fileName}</span>` : '-');
-        }
+        const tr = $(this).closest('tr');
+        tr.find('.doc-status').html(file ? '<i class="ti ti-check text-success"></i>' : '-');
+        tr.find('.doc-date').text(file ? formatDateTime(new Date()) : '-');
+        tr.find('.doc-file').html(file ? `<span>${file.name}</span>` : '-');
     });
 
-    $('#form-input-data').on('submit', function (e) {
+    $('#form-input-data').on('submit', async function (e) {
         e.preventDefault();
-        ClientHelper.notify('Fitur input data klaim belum tersedia di server.', 'warning');
+
+        const missingRequired = dokumenKlaim.filter(d => d.is_required && !d.file);
+        if (missingRequired.length > 0) {
+            ClientHelper.notify(
+                'Dokumen wajib berikut belum diunggah: ' + missingRequired.map(d => d.document_name).join(', '),
+                'warning'
+            );
+            return;
+        }
+
+        const uploaded = dokumenKlaim.filter(d => d.file);
+        if (uploaded.length === 0) {
+            ClientHelper.notify('Mohon unggah minimal 1 dokumen klaim.', 'warning');
+            return;
+        }
+
+        const submitBtn = $(this).find('button[type="submit"]');
+        submitBtn.prop('disabled', true);
+
+        try {
+            const document = await Promise.all(uploaded.map(async d => ({
+                document_id: d.id,
+                file_name: d.file.name,
+                file: await ClientHelper.fileToDataUri(d.file)
+            })));
+
+            const payload = {
+                declaration_id: $('#peserta').val(),
+                incident_date: toIsoDate($('#tanggal_kematian').val()),
+                estimated_claim: $('#estimasi_klaim').val().replace(/[^\d]/g, ''),
+                description: $('#keterangan').val(),
+                document
+            };
+
+            const res = await ClientHelper.apiFetch('/api/v1/client/claim/insert', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const json = await res.json();
+
+            if (!res.ok) {
+                ClientHelper.notify(json.message || 'Data klaim gagal disimpan.', res.status === 422 ? 'warning' : 'danger');
+                return;
+            }
+
+            ClientHelper.notify(json.message || 'Data klaim berhasil disimpan.');
+            setTimeout(() => window.location.href = '/client/klaim/data', 1200);
+        } catch (err) {
+            console.error('Gagal mengirim /claim/insert:', err);
+            ClientHelper.notify('Tidak dapat terhubung ke server. Silakan coba lagi.', 'danger');
+        } finally {
+            submitBtn.prop('disabled', false);
+        }
     });
 });
