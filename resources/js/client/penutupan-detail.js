@@ -1,11 +1,3 @@
-/**
- * ============================================================
- * PAGE: Penutupan — Detail (Reguler Griya)
- * API  : GET  /api/v1/client/declaration/detail?id=...
- *        POST /api/v1/client/declaration/validation (khusus SPV, status=3)
- * ============================================================
- */
-
 import { ClientHelper } from './helpers.js';
 
 /* Status yang boleh diedit Operator (lihat diagram transisi status). */
@@ -90,7 +82,7 @@ $(function () {
         }
 
         $('#d-files').html(files.map(f => `
-            <li><i class="ti ti-paperclip"></i> <a href="${f.file_path}" target="_blank" rel="noopener">${f.label}: ${f.file_name}</a></li>
+            <li><i class="ti ti-paperclip"></i> <a href="/${f.file_path}${f.file_name}" target="_blank" rel="noopener">${f.label}: ${f.file_name}</a></li>
         `).join(''));
     }
 

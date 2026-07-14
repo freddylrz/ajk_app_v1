@@ -68,17 +68,29 @@
                             <strong id="d-email">-</strong>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <small class="text-muted d-block">Alamat (Sesuai KTP)</small>
+                            <strong id="d-alamat-ktp">-</strong>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <small class="text-muted d-block">Alamat Tempat Tinggal</small>
+                            <strong id="d-alamat-domisili">-</strong>
+                        </div>
+                    </div>
                 </div>
 
                 {{-- Kolom 2: instansi & pinjaman --}}
                 <div class="col-lg-4">
-                    <div class="mb-3">
-                        <small class="text-muted d-block">Nama Instansi/Perusahaan</small>
-                        <strong id="d-instansi">-</strong>
-                    </div>
-                    <div class="mb-3">
-                        <small class="text-muted d-block">Pangkat/Jabatan/Golongan</small>
-                        <strong id="d-pangkat">-</strong>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <small class="text-muted d-block">Nama Instansi/Perusahaan</small>
+                            <strong id="d-instansi">-</strong>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <small class="text-muted d-block">Pangkat/Jabatan/Golongan</small>
+                            <strong id="d-pangkat">-</strong>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-6 mb-3">
@@ -121,14 +133,6 @@
                     <div class="mb-3">
                         <small class="text-muted d-block">Nilai Premi</small>
                         <strong class="fs-5" id="d-premi">-</strong>
-                    </div>
-                    <div class="mb-3">
-                        <small class="text-muted d-block">Alamat (Sesuai KTP)</small>
-                        <strong id="d-alamat-ktp">-</strong>
-                    </div>
-                    <div class="mb-3">
-                        <small class="text-muted d-block">Alamat Tempat Tinggal</small>
-                        <strong id="d-alamat-domisili">-</strong>
                     </div>
                     <div class="mb-3">
                         <small class="text-muted d-block">Dokumen Terunggah</small>
