@@ -239,6 +239,15 @@ class DeclarationController extends Controller
                 ->orderBy('created_at')
                 ->get();
 
+            $policy = DB::table('operational.tb_policy_upload')
+                ->select(
+                    'id',
+                    'file_name',
+                    'file_path'
+                )
+                ->where('declaration_id', $r->id)
+                ->first();
+
             $logs = DB::table('operational.tb_declaration_log as l')
                 ->leftJoin('operational.tb_declaration_status as s', 'l.declaration_status_id', '=', 's.id')
                 ->leftJoin('users as u', 'l.user_id_add', '=', 'u.id')
@@ -263,6 +272,7 @@ class DeclarationController extends Controller
                     'upload' => [
                         'ktp' => $ktp,
                         'debitur' => $debitur,
+                        'policy' => $policy,
                     ],
                     'logs' => $logs,
                 ]
