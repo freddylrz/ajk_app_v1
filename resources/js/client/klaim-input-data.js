@@ -54,7 +54,7 @@ function renderDokumenTable() {
         const row = $(
             `<tr>
                 <td>${index + 1}</td>
-                <td>${item.label}</td>
+                <td>${item.document_name}</td>
                 <td class="doc-file">${item.fileName ? `<a href="${item.link}" class="text-decoration-none">${item.fileName}</a>` : '-'}</td>
                 <td class="doc-status text-center">${item.uploaded ? '<i class="ti ti-check text-success"></i>' : '-'}</td>
                 <td class="doc-date text-center">${item.date || '-'}</td>
