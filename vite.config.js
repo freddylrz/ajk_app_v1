@@ -15,16 +15,16 @@ export default defineConfig({
                  'resources/js/utilities/management_user.js',
 
                  // Area client — 1 entry per halaman (dipanggil lewat @vite() di blade)
-                 'resources/js/client/dashboard.js',
-                 'resources/js/client/simulasi-premi.js',
-                 'resources/js/client/penutupan-input.js',
-                 'resources/js/client/penutupan-list.js',
-                 'resources/js/client/penutupan-terbit-polis.js',
-                 'resources/js/client/penutupan-detail.js',
-                 'resources/js/client/penutupan-update.js',
-                 'resources/js/client/klaim-input-data.js',
-                 'resources/js/client/klaim-data.js',
-                 'resources/js/client/klaim-detail.js',
+                 'resources/js/client/dashboard/index.js',
+                 'resources/js/client/simulasi-premi/index.js',
+                 'resources/js/client/penutupan/input-data.js',
+                 'resources/js/client/penutupan/list-data.js',
+                 'resources/js/client/penutupan/terbit-polis.js',
+                 'resources/js/client/penutupan/detail.js',
+                 'resources/js/client/penutupan/update-data.js',
+                 'resources/js/client/klaim/input-data.js',
+                 'resources/js/client/klaim/data.js',
+                 'resources/js/client/klaim/detail.js',
 
                  // Area publik — halaman tanpa login
                  'resources/js/public/simulasi-premi.js',

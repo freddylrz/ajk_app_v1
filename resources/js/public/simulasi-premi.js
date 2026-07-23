@@ -1,4 +1,4 @@
-import { ClientHelper } from '../client/helpers.js';
+import { ClientHelper } from '../client/shared/helpers.js';
 
 $(function () {
 

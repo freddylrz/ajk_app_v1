@@ -1,4 +1,11 @@
-import { ClientHelper } from './helpers.js';
+import { ClientHelper } from '../shared/helpers.js';
+
+/** Status global modul untuk memastikan premi sesuai dengan versi form terbaru. */
+const PREMIUM_CALCULATION_STATE = {
+    isCalculated: false,
+    formRevision: 0,
+    formSignature: null,
+};
 
 $(async function () {
     const roles = await ClientHelper.getRoles();
@@ -7,6 +14,97 @@ $(async function () {
         setTimeout(() => window.location.href = '/client/dashboard', 1000);
         return;
     }
+
+    const form = $('#form-deklarasi');
+    const floatingActions = document.querySelector('.client-form-actions');
+    const footer = document.querySelector('.pc-footer');
+    let floatingActionsFrame = null;
+
+    function updateFloatingActionsPosition() {
+        floatingActionsFrame = null;
+
+        if (!floatingActions || !footer) return;
+
+        const footerRect = footer.getBoundingClientRect();
+        const styles = window.getComputedStyle(floatingActions);
+        const gap = parseFloat(styles.getPropertyValue('--client-form-actions-gap')) || 16;
+        const footerOverlap = Math.max(0, window.innerHeight - footerRect.top);
+        const maxBottom = Math.max(gap, window.innerHeight - floatingActions.offsetHeight - gap);
+        const bottom = Math.min(gap + footerOverlap, maxBottom);
+
+        floatingActions.style.setProperty('--client-form-actions-bottom', `${bottom}px`);
+    }
+
+    function scheduleFloatingActionsPosition() {
+        if (floatingActionsFrame !== null) return;
+
+        floatingActionsFrame = window.requestAnimationFrame(updateFloatingActionsPosition);
+    }
+
+    window.addEventListener('scroll', scheduleFloatingActionsPosition, { passive: true });
+    window.addEventListener('resize', scheduleFloatingActionsPosition);
+    window.addEventListener('load', scheduleFloatingActionsPosition);
+    scheduleFloatingActionsPosition();
+
+    function getFormSignature() {
+        const fields = form.find('input:not([type="hidden"]), select, textarea').map(function () {
+            if (this.type === 'file') {
+                return {
+                    key: this.id,
+                    value: Array.from(this.files || []).map(file => [file.name, file.size, file.lastModified]),
+                };
+            }
+
+            if (this.type === 'checkbox' || this.type === 'radio') {
+                return { key: this.id, value: this.checked };
+            }
+
+            return { key: this.id || this.name, value: $(this).val() };
+        }).get();
+
+        return JSON.stringify(fields);
+    }
+
+    function updatePremiumCalculationUi(isLoading = false) {
+        const status = $('#premium-calculation-status');
+        const hint = $('#premium-calculation-hint');
+
+        if (isLoading) {
+            status.removeClass('bg-success bg-warning text-dark')
+                .addClass('bg-info')
+                .text('Sedang menghitung');
+            hint.text('Mohon tunggu hasil perhitungan premi.');
+        } else if (PREMIUM_CALCULATION_STATE.isCalculated) {
+            status.removeClass('bg-info bg-warning text-dark')
+                .addClass('bg-success')
+                .text('Premi sudah dihitung');
+            hint.text('Form siap disimpan selama tidak ada data yang diubah.');
+        } else {
+            status.removeClass('bg-info bg-success')
+                .addClass('bg-warning text-dark')
+                .text('Premi perlu dihitung');
+            hint.text('Hitung kembali premi setelah melengkapi atau mengubah form.');
+        }
+
+        $('#btn-simpan').prop('disabled', !PREMIUM_CALCULATION_STATE.isCalculated || isLoading);
+    }
+
+    function resetPremiumCalculationResult() {
+        $('#output_periode, #output_rate, #output_premi').text('-');
+        $('#rate, #premium, #end_date_computed').val('');
+    }
+
+    function invalidatePremiumCalculation() {
+        PREMIUM_CALCULATION_STATE.formRevision += 1;
+        PREMIUM_CALCULATION_STATE.isCalculated = false;
+        PREMIUM_CALCULATION_STATE.formSignature = null;
+        resetPremiumCalculationResult();
+        updatePremiumCalculationUi();
+        scheduleFloatingActionsPosition();
+    }
+
+    form.on('input change changeDate', 'input:not([type="hidden"]), select, textarea', invalidatePremiumCalculation);
+    updatePremiumCalculationUi();
 
     async function loadAsset() {
         try {
@@ -70,16 +168,25 @@ $(async function () {
         const plafond = parseInt($('#plafond_kredit').val().replace(/[^\d]/g, ''), 10);
 
         if (!tanggalLahir) {
+            invalidatePremiumCalculation();
             ClientHelper.notify('Mohon lengkapi Tanggal Lahir terlebih dahulu.', 'warning');
             return;
         }
 
         if (!tenor || !periodeAwal || !plafond) {
+            invalidatePremiumCalculation();
             ClientHelper.notify('Mohon lengkapi Tenor, Periode Awal, dan Plafond Kredit terlebih dahulu.', 'warning');
             return;
         }
 
         const btn = $(this);
+        const calculationRevision = PREMIUM_CALCULATION_STATE.formRevision;
+        const calculationFormSignature = getFormSignature();
+
+        PREMIUM_CALCULATION_STATE.isCalculated = false;
+        PREMIUM_CALCULATION_STATE.formSignature = null;
+        resetPremiumCalculationResult();
+        updatePremiumCalculationUi(true);
         btn.prop('disabled', true);
 
         try {
@@ -100,17 +207,29 @@ $(async function () {
                 return;
             }
 
+            if (calculationRevision !== PREMIUM_CALCULATION_STATE.formRevision
+                || calculationFormSignature !== getFormSignature()) {
+                ClientHelper.notify('Form berubah saat premi sedang dihitung. Silakan hitung kembali premi.', 'warning');
+                return;
+            }
+
             $('#output_periode').text(`${periodeAwal} s/d ${json.data.end_date}`);
             $('#output_rate').text(json.data.rate + ' ‰');
             $('#output_premi').text('Rp ' + json.data.premium);
             $('#rate').val(json.data.rate);
             $('#premium').val(json.data.premium);
             $('#end_date_computed').val(toIsoDate(json.data.end_date));
+            PREMIUM_CALCULATION_STATE.isCalculated = true;
+            PREMIUM_CALCULATION_STATE.formSignature = getFormSignature();
+            updatePremiumCalculationUi();
         } catch (err) {
             console.error('Gagal memanggil /declaration/premium-calculation:', err);
             ClientHelper.notify('Tidak dapat terhubung ke server.', 'danger');
         } finally {
             btn.prop('disabled', false);
+            if (!PREMIUM_CALCULATION_STATE.isCalculated) {
+                updatePremiumCalculationUi();
+            }
         }
     });
 
@@ -150,15 +269,20 @@ $(async function () {
     });
 
     /* ── Simpan ke API ── */
-    $('#form-deklarasi').on('submit', async function (e) {
+    form.on('submit', async function (e) {
         e.preventDefault();
 
-        if (!$('#rate').val() || !$('#premium').val()) {
-            ClientHelper.notify('Silakan klik tombol Hitung pada bagian Perhitungan Premi terlebih dahulu.', 'warning');
+        if (!PREMIUM_CALCULATION_STATE.isCalculated
+            || PREMIUM_CALCULATION_STATE.formSignature !== getFormSignature()
+            || !$('#rate').val()
+            || !$('#premium').val()) {
+            invalidatePremiumCalculation();
+            ClientHelper.notify('Form berubah atau premi belum dihitung. Silakan hitung kembali premi sebelum menyimpan.', 'warning');
             return;
         }
 
-        const submitBtn = $(this).find('button[type="submit"]');
+        const submitRevision = PREMIUM_CALCULATION_STATE.formRevision;
+        const submitBtn = $('#btn-simpan');
         submitBtn.prop('disabled', true);
 
         try {
@@ -191,6 +315,14 @@ $(async function () {
                 debtor_file: await Promise.all(debtorFiles.map(f => ClientHelper.fileToDataUri(f))),
             };
 
+            if (!PREMIUM_CALCULATION_STATE.isCalculated
+                || submitRevision !== PREMIUM_CALCULATION_STATE.formRevision
+                || PREMIUM_CALCULATION_STATE.formSignature !== getFormSignature()) {
+                invalidatePremiumCalculation();
+                ClientHelper.notify('Form berubah saat data sedang disiapkan. Silakan hitung kembali premi.', 'warning');
+                return;
+            }
+
             const res = await ClientHelper.apiFetch('/api/v1/client/declaration/insert', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -210,7 +342,7 @@ $(async function () {
             console.error('Gagal mengirim /declaration/insert:', err);
             ClientHelper.notify('Tidak dapat terhubung ke server. Silakan coba lagi.', 'danger');
         } finally {
-            submitBtn.prop('disabled', false);
+            submitBtn.prop('disabled', !PREMIUM_CALCULATION_STATE.isCalculated);
         }
     });
 });

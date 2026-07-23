@@ -87,5 +87,5 @@
 
 @push('levelPluginsJs')
     <script src="{{ asset('assets/js/plugins/sweetalert2.all.min.js') }}"></script>
-    @vite(['resources/js/client/simulasi-premi.js'])
+    @vite(['resources/js/client/simulasi-premi/index.js'])
 @endpush

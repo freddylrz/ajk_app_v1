@@ -246,7 +246,7 @@
     <script src="{{ asset('assets/js/plugins/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/sweetalert2.all.min.js') }}"></script>
 
-    @vite(['resources/js/auth/logout.js', 'resources/js/client/role-guard.js'])
+    @vite(['resources/js/auth/logout.js', 'resources/js/client/auth/role-guard.js'])
 
     <script>
         window.__cookieDomain = @json(config('setup.domain') ?: null);

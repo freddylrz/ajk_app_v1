@@ -7,7 +7,7 @@
  * ============================================================
  */
 
-import { ClientHelper } from './helpers.js';
+import { ClientHelper } from '../shared/helpers.js';
 
 let dokumenKlaim = [];
 
