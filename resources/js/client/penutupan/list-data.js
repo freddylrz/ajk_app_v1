@@ -5,7 +5,7 @@
  * ============================================================
  */
 
-import { ClientHelper } from './helpers.js';
+import { ClientHelper } from '../shared/helpers.js';
 let firstPath = window.location.pathname
     .split('/')
     .filter(Boolean)[0];

@@ -37,5 +37,5 @@
 @endsection
 
 @push('levelPluginsJs')
-    @vite(['resources/js/client/penutupan-terbit-polis.js'])
+    @vite(['resources/js/client/penutupan/terbit-polis.js'])
 @endpush

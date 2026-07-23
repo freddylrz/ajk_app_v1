@@ -34,5 +34,5 @@
 @endsection
 
 @push('levelPluginsJs')
-    @vite(['resources/js/client/klaim-data.js'])
+    @vite(['resources/js/client/klaim/data.js'])
 @endpush

@@ -7,59 +7,27 @@ use Illuminate\Support\Facades\Route;
 | Client Routes
 |--------------------------------------------------------------------------
 |
-| Semua route untuk user CLIENT (operator cabang) didefinisikan di sini.
-| Tanpa controller: halaman statis pakai Route::view, halaman detail pakai
-| closure agar bisa meneruskan {id} ke view. Logika data ada di JS.
+| Entry point route web untuk user CLIENT (operator cabang).
+| Detail setiap fitur dipisahkan di routes/client agar penambahan halaman
+| baru tidak membuat satu file route menjadi terlalu besar.
 |
 | Konvensi:
 |   - Prefix URL   : /client/...
 |   - Prefix name  : client....
 |   - View         : resources/views/client/...
-|   - JS Halaman   : public/assets/js/client/...
+|   - JS Halaman   : resources/js/client/<fitur>/...
 |
-| Route admin dibuat terpisah di routes/admin.php dengan pola yang sama.
+| File fitur:
+|   - routes/client/dashboard.php
+|   - routes/client/simulasi-premi.php
+|   - routes/client/penutupan.php
+|   - routes/client/klaim.php
 |
 */
 
-Route::prefix('client')->name('client.')
-    ->group(function () {
-
-        // ── Dashboard ─────────────────────────────────────────────
-        Route::view('/dashboard', 'home')
-            ->name('dashboard');
-
-        // ── Simulasi Hitung Premi ─────────────────────────────────
-        Route::view('/simulasi-premi', 'client.simulasi-premi')
-            ->name('simulasi-premi');
-
-        // ── Penutupan ─────────────────────────────────────────────
-        Route::prefix('penutupan')->name('penutupan.')->group(function () {
-            Route::view('/input-data', 'client.penutupan.input-data')
-                ->name('input');
-            Route::view('/list-data', 'client.penutupan.list-data')
-                ->name('list');
-            Route::view('/terbit-polis', 'client.penutupan.terbit-polis')
-                ->name('terbit-polis');
-            Route::get('/detail/{id}', function (string $id) {
-                return view('client.penutupan.detail', ['id' => $id]);
-            })->name('detail');
-            Route::get('/update/{id}', function (string $id) {
-                return view('client.penutupan.update-data', ['id' => $id]);
-            })->name('update');
-            Route::view('/rekap', 'client.penutupan.rekap')
-                ->name('rekap');
-        });
-
-        // ── Klaim ─────────────────────────────────────────────────
-        Route::prefix('klaim')->name('klaim.')->group(function () {
-            Route::view('/input-data', 'client.klaim.input-data')
-                ->name('input-data');
-            Route::view('/data', 'client.klaim.data-klaim')
-                ->name('data');
-            Route::view('/rekap', 'client.klaim.rekap')
-                ->name('rekap');
-            Route::get('/detail/{id}', function (string $id) {
-                return view('client.klaim.detail', ['id' => $id]);
-            })->name('detail');
-        });
-    });
+Route::prefix('client')->name('client.')->group(function () {
+    require __DIR__.'/client/dashboard.php';
+    require __DIR__.'/client/simulasi-premi.php';
+    require __DIR__.'/client/penutupan.php';
+    require __DIR__.'/client/klaim.php';
+});

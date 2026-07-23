@@ -1,4 +1,4 @@
-import { ClientHelper } from './helpers.js';
+import { ClientHelper } from '../shared/helpers.js';
 
 /* Status yang boleh diedit Operator (lihat diagram transisi status). */
 const OPR_EDITABLE_STATUS = [1, 2, 4];
