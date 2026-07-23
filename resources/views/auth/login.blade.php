@@ -71,6 +71,11 @@
                            <div class="d-grid mt-4">
                               <button type="submit" class="btn btn-primary" id="btn-submit">Masuk</button>
                            </div>
+                           <div class="d-grid mt-2">
+                              <a href="{{ route('public.simulasi-premi') }}" class="btn btn-outline-secondary">
+                                 <i class="ti ti-calculator"></i> Simulasi Hitung Premi
+                              </a>
+                           </div>
                             </form>
                         </div>
                      </div>

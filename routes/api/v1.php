@@ -3,6 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\DashboardController;
+use App\Http\Controllers\Api\V1\Client\DeclarationController;
+
+// Publik — tidak butuh login, dipakai oleh halaman Simulasi Hitung Premi versi publik.
+Route::prefix('public/declaration')->group(function () {
+    Route::post('/premium-calculation', [DeclarationController::class, 'premiumCalculation']);
+});
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);

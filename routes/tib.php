@@ -8,6 +8,10 @@ Route::prefix('tib')->name('tib.')->group(function () {
     Route::view('/dashboard', 'home')
         ->name('dashboard');
 
+    // ── Simulasi Hitung Premi ─────────────────────────────────
+    Route::view('/simulasi-premi', 'client.simulasi-premi')
+        ->name('simulasi-premi');
+
     // ── Utilities ─────────────────────────────────────────────
     Route::prefix('utilities')->name('utilities.')->group(function () {
         Route::view('/list-branch', 'tib.utilities.branch-management')

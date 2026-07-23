@@ -28,6 +28,10 @@ Route::prefix('client')->name('client.')
         Route::view('/dashboard', 'home')
             ->name('dashboard');
 
+        // ── Simulasi Hitung Premi ─────────────────────────────────
+        Route::view('/simulasi-premi', 'client.simulasi-premi')
+            ->name('simulasi-premi');
+
         // ── Penutupan ─────────────────────────────────────────────
         Route::prefix('penutupan')->name('penutupan.')->group(function () {
             Route::view('/input-data', 'client.penutupan.input-data')
