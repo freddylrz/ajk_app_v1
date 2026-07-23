@@ -97,6 +97,12 @@
                             <span class="pc-mtext">Beranda</span>
                         </a>
                     </li>
+                    <li class="pc-item {{ Request::is("$prefix/simulasi-premi") ? 'active' : '' }}">
+                        <a href="/{{ $prefix }}/simulasi-premi" class="pc-link">
+                            <i class="ti ti-calculator"></i>
+                            <span class="pc-mtext">Simulasi Hitung Premi</span>
+                        </a>
+                    </li>
                     <li class="pc-item pc-hasmenu {{ Request::is("$prefix/penutupan/*") ? 'active' : '' }}">
                         <a href="#!" class="pc-link">
                             <i class="ti ti-file-certificate"></i>

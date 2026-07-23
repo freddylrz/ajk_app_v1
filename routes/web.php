@@ -23,6 +23,12 @@ Route::middleware([RedirectIfAccessTokenExist::class])->group(function () {
     })->name('login');
 });
 
+// Halaman publik — bisa diakses siapa saja, login atau tidak, karena tidak
+// memuat data pribadi (hanya kalkulator simulasi premi).
+Route::get('/simulasi-premi', function () {
+    return view('public.simulasi-premi');
+})->name('public.simulasi-premi');
+
 Route::middleware([CheckAccessToken::class])->group(function () {
     require __DIR__ . '/tib.php';
     require __DIR__ . '/client.php';

@@ -16,6 +16,7 @@ export default defineConfig({
 
                  // Area client — 1 entry per halaman (dipanggil lewat @vite() di blade)
                  'resources/js/client/dashboard.js',
+                 'resources/js/client/simulasi-premi.js',
                  'resources/js/client/penutupan-input.js',
                  'resources/js/client/penutupan-list.js',
                  'resources/js/client/penutupan-terbit-polis.js',
@@ -24,6 +25,9 @@ export default defineConfig({
                  'resources/js/client/klaim-input-data.js',
                  'resources/js/client/klaim-data.js',
                  'resources/js/client/klaim-detail.js',
+
+                 // Area publik — halaman tanpa login
+                 'resources/js/public/simulasi-premi.js',
                 ],
             refresh: true,
         }),
