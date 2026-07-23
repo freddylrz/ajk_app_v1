@@ -46,6 +46,8 @@ Route::prefix('client')->name('client.')
             Route::get('/update/{id}', function (string $id) {
                 return view('client.penutupan.update-data', ['id' => $id]);
             })->name('update');
+            Route::view('/rekap', 'client.penutupan.rekap')
+                ->name('rekap');
         });
 
         // ── Klaim ─────────────────────────────────────────────────
@@ -54,6 +56,8 @@ Route::prefix('client')->name('client.')
                 ->name('input-data');
             Route::view('/data', 'client.klaim.data-klaim')
                 ->name('data');
+            Route::view('/rekap', 'client.klaim.rekap')
+                ->name('rekap');
             Route::get('/detail/{id}', function (string $id) {
                 return view('client.klaim.detail', ['id' => $id]);
             })->name('detail');
