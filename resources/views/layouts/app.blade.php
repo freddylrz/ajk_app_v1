@@ -62,7 +62,7 @@
     <nav class="pc-sidebar">
         <div class="navbar-wrapper">
             <div class="m-header">
-                <a href="{{ $isClient ? route('client.dashboard') : '/admin/dashboard' }}"
+                <a href="/"
                     class="b-brand text-primary">
                     <img src="{{ asset('assets/images/tib-logo.svg') }}" style="height: 56px; width: auto;" />
                 </a>
