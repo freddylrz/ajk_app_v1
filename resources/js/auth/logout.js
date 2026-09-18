@@ -2,6 +2,8 @@ import {
     getAccessTokenFromCookies,
     getRefreshAccessTokenFromCookies
 } from '/resources/js/helper_cookie.js';
+import { ClientHelper } from '/resources/js/client/shared/helpers.js';
+import '/resources/js/client/auth/role-guard.js';
 var token
 window.addEventListener("unhandledrejection", function (e) {
     console.error("🚨 Unhandled Promise rejection:", e.reason);
@@ -165,21 +167,17 @@ $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
 
 export var roles;
 async function getUserInfo() {
-    $.ajax({
-        url: '/api/v1/auth/user-info',
-        method: "GET",
-        timeout: 0,
-    }).done(async function (responses) {
+    try {
+        const userInfo = await ClientHelper.getUserInfo();
+        roles = userInfo?.roles || [];
 
-        roles = responses.data.user_info.roles || [];
-        const path = window.location.pathname;
-
-        $('.display_user').text(responses.data.user_info.display_name || 'User');
+        $('.display_user').text(userInfo?.display_name || 'User');
         if(roles.includes('SPV')){
             $('#menuInput').hide();
         }
-
-    });
+    } catch (err) {
+        console.error('Gagal memuat informasi user:', err);
+    }
 }
 // Call this function when the document is ready or on a specific event
 $(document).ready(async function () {

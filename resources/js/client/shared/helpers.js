@@ -7,6 +7,9 @@
 
 export const ClientHelper = {
 
+    // Satu request user-info dipakai bersama oleh semua entry script pada halaman.
+    _userInfoPromise: null,
+
     /** Format angka jadi format ribuan: 1000000 → "1,000,000" */
     formatNumber(value) {
         return new Intl.NumberFormat('en-US').format(value ?? 0);
@@ -71,12 +74,49 @@ export const ClientHelper = {
      * dari GET /api/v1/auth/user-info. Dipakai untuk menampilkan/menyembunyikan
      * aksi Edit (khusus OPR) & Validasi (khusus SPV) di halaman detail.
      */
+    getUserInfo() {
+        if (!this._userInfoPromise) {
+            this._userInfoPromise = this.fetchUserInfoWithRetry()
+                .catch((err) => {
+                    // Izinkan pemanggilan berikutnya mencoba lagi setelah semua retry gagal.
+                    this._userInfoPromise = null;
+                    throw err;
+                });
+        }
+
+        return this._userInfoPromise;
+    },
+
+    async fetchUserInfoWithRetry(maxRetries = 2) {
+        for (let attempt = 0; attempt <= maxRetries; attempt++) {
+            const res = await this.apiFetch('/api/v1/auth/user-info');
+            const json = await res.json().catch(() => ({}));
+
+            if (res.ok) {
+                return json.data?.user_info || null;
+            }
+
+            const canRetry = res.status >= 500 && attempt < maxRetries;
+            if (!canRetry) {
+                const error = new Error(json.message || 'Gagal memuat informasi user.');
+                error.status = res.status;
+                throw error;
+            }
+
+            const delayMs = 500 * (2 ** attempt);
+            console.warn(
+                `User info gagal dengan status ${res.status}. Mencoba kembali dalam ${delayMs} ms.`
+            );
+            await new Promise(resolve => setTimeout(resolve, delayMs));
+        }
+
+        return null;
+    },
+
     async getRoles() {
         try {
-            const res = await this.apiFetch('/api/v1/auth/user-info');
-            const json = await res.json();
-            if (!res.ok) return [];
-            return json.data?.user_info?.roles || [];
+            const userInfo = await this.getUserInfo();
+            return userInfo?.roles || [];
         } catch (err) {
             console.error('Gagal memuat /auth/user-info:', err);
             return [];

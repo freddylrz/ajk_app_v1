@@ -196,13 +196,6 @@
                     @endif
                 </ul>
             </div>
-            <div class="ms-auto d-flex align-items-center gap-2">
-                <div class="d-none d-sm-flex align-items-center gap-2"
-                    style="font-size:13px;font-weight:400;color:#333;border-left:1px solid #eee;padding-left:14px;">
-                    <i class="ti ti-user-circle" style="font-size:14px;"></i>
-                    <span class="display_user"></span>
-                </div>
-            </div>
         </div>
     </header>
     <!-- [ Header ] end -->
@@ -221,7 +214,7 @@
         <div class="footer-wrapper container-fluid">
             <div class="row">
                 <div class="col my-1">
-                    <span class="m-0">Copyright &copy; {{ date('Y') }} Tugu Insurance Brokers. All rights
+                    <span class="m-0">Copyright &copy; 2026 Tugu Insurance Brokers. All rights
                         reserved.</span>
                 </div>
             </div>
@@ -246,7 +239,7 @@
     <script src="{{ asset('assets/js/plugins/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/sweetalert2.all.min.js') }}"></script>
 
-    @vite(['resources/js/auth/logout.js', 'resources/js/client/auth/role-guard.js'])
+    @vite(['resources/js/auth/logout.js'])
 
     <script>
         window.__cookieDomain = @json(config('setup.domain') ?: null);
