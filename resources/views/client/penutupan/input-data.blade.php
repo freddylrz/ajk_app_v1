@@ -2,6 +2,67 @@
 
 @section('pageTitle', 'Form Deklarasi')
 
+@push('pageStyles')
+<style>
+    .client-form-actions-spacer {
+        height: 110px;
+    }
+
+    .client-form-actions {
+        --client-form-actions-gap: 16px;
+        --client-form-actions-bottom: var(--client-form-actions-gap);
+        position: fixed;
+        right: 40px;
+        bottom: max(var(--client-form-actions-bottom), env(safe-area-inset-bottom));
+        left: 320px;
+        z-index: 1025;
+        pointer-events: none;
+        transition: left 0.2s ease;
+    }
+
+    .client-form-actions .card {
+        margin-bottom: 0;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: 0 12px 32px rgba(31, 45, 61, 0.18);
+        backdrop-filter: blur(10px);
+        pointer-events: auto;
+    }
+
+    .pc-sidebar.pc-sidebar-hide ~ .pc-container .client-form-actions {
+        left: 40px;
+    }
+
+    @media (max-width: 1024.98px) {
+        .client-form-actions {
+            right: 20px;
+            left: 20px;
+        }
+    }
+
+    @media (max-width: 575.98px) {
+        .client-form-actions-spacer {
+            height: 155px;
+        }
+
+        .client-form-actions {
+            --client-form-actions-gap: 12px;
+            right: 12px;
+            left: 12px;
+        }
+
+        .client-form-actions__content,
+        .client-form-actions__buttons {
+            width: 100%;
+        }
+
+        .client-form-actions__buttons .btn {
+            flex: 1 1 0;
+        }
+    }
+</style>
+@endpush
+
 @section('content')
 
 <div class="pct-body">
@@ -181,15 +242,9 @@
                     </div>
                 </div>
             </div>
-            <div class="text-end mb-3">
-                <button type="button" class="btn btn-info" id="btn-hitung">
-                    <i class="ti ti-calculator"></i> Hitung
-                </button>
-            </div>
+            <hr class="mt-0">
 
-            <hr>
-
-            <h5 class="mb-3">Hasil :</h5>
+            <h5 class="mb-3">Hasil:</h5>
             <div class="row">
                 <div class="col-md-4">
                     <small class="text-muted d-block">Periode</small>
@@ -244,20 +299,41 @@
         </div>
     </div>
 
-    {{-- ══ PERHATIAN + AKSI ══ --}}
+    {{-- ══ PERHATIAN ══ --}}
     <div class="card">
         <div class="card-body">
-            <div class="alert alert-warning mb-4">
+            <div class="alert alert-warning mb-0">
                 <strong><i class="ti ti-info-circle"></i> Perhatian :</strong>
                 <p class="mb-1">Mohon dalam mengisi data debitur dan Keterangan Kesehatan harus sesuai dengan data yang sebenarnya,
                    agar tidak terjadi kendala pada saat proses pengajuan klaim.</p>
                 <p class="mb-0">Apabila dalam 14 hari belum melengkapi data debitur, maka secara otomatis sistem
                    akan terkunci — silakan hubungi PIC TuguBro.</p>
             </div>
-            <div class="d-flex justify-content-end gap-3 flex-wrap">
-                <button type="submit" class="btn btn-success">
-                    <i class="ti ti-device-floppy"></i> Simpan Data
-                </button>
+        </div>
+    </div>
+
+    <div class="client-form-actions-spacer" aria-hidden="true"></div>
+
+    {{-- ══ FLOATING FORM ACTIONS ══ --}}
+    <div class="client-form-actions">
+        <div class="card">
+            <div class="card-body py-3 d-flex align-items-center justify-content-between gap-3 flex-wrap">
+                <div class="client-form-actions__content" role="status" aria-live="polite">
+                    <span class="badge bg-warning text-dark" id="premium-calculation-status">
+                        Premi perlu dihitung
+                    </span>
+                    <small class="text-muted d-block mt-1" id="premium-calculation-hint">
+                        Hitung kembali premi setelah melengkapi atau mengubah form.
+                    </small>
+                </div>
+                <div class="client-form-actions__buttons d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-info" id="btn-hitung">
+                        <i class="ti ti-calculator"></i> Hitung Premi
+                    </button>
+                    <button type="submit" class="btn btn-success" id="btn-simpan" disabled>
+                        <i class="ti ti-device-floppy"></i> Simpan Data
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -269,5 +345,5 @@
 
 @push('levelPluginsJs')
     <script src="{{ asset('assets/js/plugins/sweetalert2.all.min.js') }}"></script>
-    @vite(['resources/js/client/penutupan-input.js'])
+    @vite(['resources/js/client/penutupan/input-data.js'])
 @endpush

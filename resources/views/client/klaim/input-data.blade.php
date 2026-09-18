@@ -133,5 +133,5 @@
 @endsection
 
 @push('levelPluginsJs')
-    @vite(['resources/js/client/klaim-input-data.js'])
+    @vite(['resources/js/client/klaim/input-data.js'])
 @endpush

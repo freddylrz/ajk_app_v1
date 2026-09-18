@@ -6,7 +6,7 @@
  * ============================================================
  */
 
-import { ClientHelper } from './helpers.js';
+import { ClientHelper } from '../shared/helpers.js';
 
 $(function () {
     // TODO: sambungkan ke endpoint daftar klaim begitu tersedia.

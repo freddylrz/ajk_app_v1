@@ -5,7 +5,7 @@
 <div class="pct-body">
 <div class="card">
     <div class="card-header">
-        <h3>Data Klaim</h3>
+        <h3>Rekap Klaim</h3>
     </div>
     <div class="card-body">
         <div class="table-responsive dt-responsive">

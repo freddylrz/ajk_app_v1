@@ -110,5 +110,5 @@
 
 @push('levelPluginsJs')
     <script src="{{ asset('assets/js/plugins/apexcharts.min.js') }}"></script>
-    @vite(['resources/js/client/dashboard.js'])
+    @vite(['resources/js/client/dashboard/index.js'])
 @endpush

@@ -8,6 +8,10 @@ Route::prefix('tib')->name('tib.')->group(function () {
     Route::view('/dashboard', 'home')
         ->name('dashboard');
 
+    // ── Simulasi Hitung Premi ─────────────────────────────────
+    Route::view('/simulasi-premi', 'client.simulasi-premi')
+        ->name('simulasi-premi');
+
     // ── Utilities ─────────────────────────────────────────────
     Route::prefix('utilities')->name('utilities.')->group(function () {
         Route::view('/list-branch', 'tib.utilities.branch-management')
@@ -25,12 +29,16 @@ Route::prefix('tib')->name('tib.')->group(function () {
         Route::get('/detail/{id}', function (string $id) {
             return view('client.penutupan.detail', ['id' => $id]);
         })->name('detail');
+        Route::view('/rekap', 'client.penutupan.rekap')
+            ->name('rekap');
     });
 
     // ── Klaim ─────────────────────────────────────────────────
     Route::prefix('klaim')->name('klaim.')->group(function () {
         Route::view('/data', 'client.klaim.data-klaim')
             ->name('data');
+        Route::view('/rekap', 'client.klaim.rekap')
+            ->name('rekap');
         Route::get('/detail/{id}', function (string $id) {
             return view('client.klaim.detail', ['id' => $id]);
         })->name('detail');

@@ -39,5 +39,5 @@
 @endsection
 
 @push('levelPluginsJs')
-    @vite(['resources/js/client/penutupan-list.js'])
+    @vite(['resources/js/client/penutupan/list-data.js'])
 @endpush
